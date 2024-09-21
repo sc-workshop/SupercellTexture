@@ -2,7 +2,7 @@
 #include <core/console/console.h>
 #include <core/io/file_stream.h>
 
-#include "texture.h"
+#include "texture/texture.h"
 
 int main(int argc, const char** argv)
 {
