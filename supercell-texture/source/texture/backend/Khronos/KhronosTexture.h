@@ -1,6 +1,6 @@
 #pragma once
 
-#include "compressed_image.h"
+#include "texture/interface/compressed_image.h"
 #include <compression/backend/astc/astc.h>
 #include <core/exception/exception.h>
 #include <core/memory/ref.h>
@@ -74,6 +74,14 @@ namespace sc
 			virtual glInternalFormat internal_format() const = 0;
 			virtual glFormat format() const = 0;
 			virtual glType type() const = 0;
+
+			// Parent class data managers
+		public:
+			virtual std::size_t decompressed_data_length() = 0;
+			virtual void decompress_data(Stream& buffer) = 0;
+
+			virtual std::size_t data_length() const = 0;
+			virtual std::uint8_t* data() const = 0;
 
 			// Khronos shared data managers
 		public:
