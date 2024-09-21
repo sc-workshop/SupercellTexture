@@ -312,7 +312,7 @@ namespace sc
 		{
 			for (uint8_t i = 0; sizeof(KhronosTexture1::FileIdentifier) > i; i++)
 			{
-				if (buffer.read_byte() != KhronosTexture1::FileIdentifier[i])
+				if (buffer.read_unsigned_byte() != KhronosTexture1::FileIdentifier[i])
 				{
 					throw Exception("Buffer is not KTX file or it is corrupted");
 				}
@@ -343,14 +343,14 @@ namespace sc
 			m_width = static_cast<uint16_t>(buffer.read_unsigned_int());
 			m_height = static_cast<uint16_t>(buffer.read_unsigned_int());
 
-			// pixelDepth | must be 0											//
-			//assert(buffer.read_unsigned_int() == 0 && "Pixel Depth != 0");		//
+			// pixelDepth | must be 0											//<-
+			buffer.read_unsigned_int();											//
 																				//
 			// numberOfArrayElements | must be 0								// Some hardcoded/unsuported values
-			//assert(buffer.read_unsigned_int() == 0 && "Array elements != 0");	//
+			buffer.read_unsigned_int();											//
 																				//
 			// numberOfFaces | must be 1										//
-			//assert(buffer.read_unsigned_int() == 1 && "Faces number != 1");		//
+			buffer.read_unsigned_int();											//<-
 
 			uint32_t levels_count = buffer.read_unsigned_int();
 
