@@ -5,11 +5,10 @@ file(GLOB_RECURSE HEADERS source/*.h)
 file(GLOB_RECURSE SOURCES source/*.cpp)
 
 # choosing build type
-if(SC_TEXTURE_BUILD_SHARED)
+if(WK_BUILD_SHARED)
     # shared library
     set(TARGET supercell-texture-shared)
     add_library(${TARGET} SHARED)
-    
 
 else()
     # static library
@@ -26,7 +25,7 @@ target_sources(${TARGET} PRIVATE ${HEADERS} ${SOURCES})
 # include directories
 target_include_directories(${TARGET} PUBLIC source)
 
-target_link_libraries(${TARGET} PUBLIC supercell::core)
+target_link_libraries(${TARGET} PUBLIC wk::core)
 target_link_libraries(${TARGET} PUBLIC supercell::compression)
 
 set_target_properties(${TARGET} PROPERTIES
@@ -34,4 +33,4 @@ set_target_properties(${TARGET} PROPERTIES
 )
 
 # setup project
-sc_project_setup(${TARGET})
+wk_project_setup(${TARGET})

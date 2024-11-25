@@ -1,5 +1,7 @@
 #include "KhronosTexture1.h"
 
+using namespace wk;
+
 namespace sc
 {
 	namespace texture {
@@ -38,7 +40,7 @@ namespace sc
 			}
 
 			BufferStream* stream = new BufferStream(buffer_size);
-			sc::Memory::copy(buffer, stream->data(), buffer_size);
+			Memory::copy(buffer, stream->data(), buffer_size);
 
 			m_levels.push_back(stream);
 		}
@@ -188,7 +190,7 @@ namespace sc
 			if (source_depth != destination_depth)
 			{
 				image_buffer_size = Image::calculate_image_length(m_width, m_height, destination_depth);
-				image_buffer = sc::Memory::allocate(image_buffer_size);
+				image_buffer = Memory::allocate(image_buffer_size);
 				Image::remap(
 					(uint8_t*)stream.data(), image_buffer,
 					m_width, m_height,
@@ -209,7 +211,7 @@ namespace sc
 
 			default:
 				buffer->resize(input_image.length());
-				sc::Memory::copy(
+				Memory::copy(
 					image_buffer ? image_buffer : (uint8_t*)stream.data(),
 					buffer->data(),
 					input_image.length()

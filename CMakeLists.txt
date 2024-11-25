@@ -10,8 +10,10 @@ option(SC_TEXTURE_BUILD_CLI "Build CLI version of supercell::texture library" ON
 include(FetchContent)
 
 if(SC_TEXTURE_BUILD_CLI)
-    set(SC_CLI_DEPENDENCIES ON)
+    set(WK_CLI_DEPENDENCIES ON)
 endif()
+
+set(WK_SERIALIZATION_FLATBUFFER ON)
 
 include(cmake/dependencies.cmake)
 

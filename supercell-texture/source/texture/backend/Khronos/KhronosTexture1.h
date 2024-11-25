@@ -8,7 +8,7 @@ namespace sc
 	{
 		// TODO: mip maps ?
 		// TODO: ETC compression
-		class SUPERCELL_API KhronosTexture1 : public KhronosTexture
+		class WORKSHOP_API KhronosTexture1 : public KhronosTexture
 		{
 		public:
 			static const uint8_t FileIdentifier[12];
@@ -18,7 +18,7 @@ namespace sc
 			/// Reads ktx1 file from stream
 			/// </summary>
 			/// <param name="buffer"></param>
-			KhronosTexture1(Stream& buffer);
+			KhronosTexture1(wk::Stream& buffer);
 
 			/// <summary>
 			/// Initializes a object with specified format from provided buffer. Buffer is accepted as is and will not be compressed.
@@ -33,7 +33,7 @@ namespace sc
 			/// </summary>
 			/// <param name="image"></param>
 			/// <param name="format"></param>
-			KhronosTexture1(RawImage& image, glInternalFormat format);
+			KhronosTexture1(wk::RawImage& image, glInternalFormat format);
 
 			~KhronosTexture1();
 
@@ -52,7 +52,7 @@ namespace sc
 			virtual size_t data_length(uint32_t level_index) const;
 
 			virtual uint8_t* data() const;
-			virtual const BufferStream* data(uint32_t level_index) const;
+			virtual const wk::BufferStream* data(uint32_t level_index) const;
 
 			virtual bool is_compressed() const;
 
@@ -60,12 +60,12 @@ namespace sc
 			size_t decompressed_data_length(uint32_t level_index);
 
 		public:
-			virtual void write(Stream& buffer);
-			virtual void decompress_data(Stream& output);
+			virtual void write(wk::Stream& buffer);
+			virtual void decompress_data(wk::Stream& output);
 
 		public:
-			virtual void decompress_data(Stream& output, uint32_t level_index);
-			virtual void set_level_data(Stream& data, Image::PixelDepth data_format, uint32_t level_index);
+			virtual void decompress_data(wk::Stream& output, uint32_t level_index);
+			virtual void set_level_data(wk::Stream& data, Image::PixelDepth data_format, uint32_t level_index);
 			virtual void reset_level_data(uint32_t level_index);
 
 		public:
@@ -90,14 +90,14 @@ namespace sc
 			/// </summary>
 			/// <param name="buffer"></param>
 			/// <returns> Image levels count </returns>
-			uint32_t read_header(Stream& buffer);
+			uint32_t read_header(wk::Stream& buffer);
 
 		private:
 			glType m_type;
 			glFormat m_format;
 			glInternalFormat m_internal_format;
 
-			std::vector<BufferStream*> m_levels;
+			std::vector<wk::BufferStream*> m_levels;
 		};
 	}
 }

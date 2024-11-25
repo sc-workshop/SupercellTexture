@@ -1,23 +1,23 @@
 #pragma once
 
 #include "texture/interface/compressed_image.h"
-#include <compression/backend/astc/astc.h>
-#include <core/exception/exception.h>
-#include <core/memory/ref.h>
-#include <core/memory/memory.h>
-#include <core/preprocessor/api.h>
+#include "compression/backend/astc/astc.h"
+#include "core/exception/exception.h"
+#include "core/memory/ref.h"
+#include "core/memory/memory.h"
+#include "core/preprocessor/api.h"
 
-#include <core/io/buffer_stream.h>
-#include <core/io/memory_stream.h>
-#include <core/image/raw_image.h>
+#include "core/io/buffer_stream.h"
+#include "core/io/memory_stream.h"
+#include "core/image/raw_image.h"
 
-#include <compression/compression.h>
+#include "compression/compression.h"
 
 namespace sc
 {
 	namespace texture
 	{
-		class SUPERCELL_API KhronosTexture : public CompressedImage
+		class WORKSHOP_API KhronosTexture : public CompressedImage
 		{
 			// Khronos shared definitions
 		public:
@@ -78,21 +78,21 @@ namespace sc
 			// Parent class data managers
 		public:
 			virtual std::size_t decompressed_data_length() = 0;
-			virtual void decompress_data(Stream& buffer) = 0;
+			virtual void decompress_data(wk::Stream& buffer) = 0;
 
 			virtual std::size_t data_length() const = 0;
 			virtual std::uint8_t* data() const = 0;
 
 			// Khronos shared data managers
 		public:
-			virtual void decompress_data(Stream& output, uint32_t level_index) = 0;
-			virtual void set_level_data(Stream& data, Image::PixelDepth data_format, uint32_t level_index) = 0;
+			virtual void decompress_data(wk::Stream& output, uint32_t level_index) = 0;
+			virtual void set_level_data(wk::Stream& data, Image::PixelDepth data_format, uint32_t level_index) = 0;
 			virtual void reset_level_data(uint32_t level_index) = 0;
 
 			// Image functions for Khronos mip mapping system
 		public:
 			virtual size_t data_length(uint32_t level_index) const = 0;
-			virtual const BufferStream* data(uint32_t level_index) const = 0;
+			virtual const wk::BufferStream* data(uint32_t level_index) const = 0;
 
 			// Khronos V1 format converters
 		public:
@@ -106,8 +106,8 @@ namespace sc
 		protected:
 #pragma region
 			static void get_astc_blocks(glInternalFormat format, uint8_t& x, uint8_t& y, uint8_t& z);
-			void decompress_astc(Stream& input, Stream& output, uint16_t width, uint16_t height);
-			void compress_astc(Stream& input, Stream& output);
+			void decompress_astc(wk::Stream& input, wk::Stream& output, uint16_t width, uint16_t height);
+			void compress_astc(wk::Stream& input, wk::Stream& output);
 
 #pragma endregion ASTC
 		};

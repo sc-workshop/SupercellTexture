@@ -1,5 +1,7 @@
 #include "KhronosTexture.h"
 
+using namespace wk;
+
 namespace sc
 {
 	namespace texture
