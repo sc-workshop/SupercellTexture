@@ -4,7 +4,7 @@
 project(supercell-sdk)
 
 # options
-option(SC_TEXTURE_BUILD_CLI "Build CLI version of supercell::texture library" ON)
+option(SC_TEXTURE_BUILD_CLI "Build CLI version of supercell::texture library" OFF)
 
 # includes
 include(FetchContent)
