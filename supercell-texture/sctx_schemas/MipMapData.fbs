@@ -1,0 +1,11 @@
+namespace sc.texture.SCTX;
+
+table MipMap
+{
+    width: ushort;
+    height: ushort;
+    unknown_length: uint;
+    hash: [ubyte];
+}
+
+root_type MipMap;

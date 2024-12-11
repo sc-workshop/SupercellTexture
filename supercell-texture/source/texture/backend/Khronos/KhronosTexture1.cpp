@@ -60,7 +60,7 @@ namespace sc
 				m_type = glType::GL_UNSIGNED_BYTE;
 			}
 
-			MemoryStream image_data(image.data(), image.data_length());
+			SharedMemoryStream image_data(image.data(), image.data_length());
 
 			set_level_data(
 				image_data,
@@ -198,7 +198,7 @@ namespace sc
 				);
 			}
 
-			MemoryStream input_image(
+			SharedMemoryStream input_image(
 				image_buffer ? image_buffer : (uint8_t*)stream.data(),
 				image_buffer ? image_buffer_size : stream.length()
 			);

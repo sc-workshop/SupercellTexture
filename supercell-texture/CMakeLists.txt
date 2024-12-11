@@ -3,6 +3,7 @@
 # C++ headers and source files
 file(GLOB_RECURSE HEADERS source/*.h)
 file(GLOB_RECURSE SOURCES source/*.cpp)
+file(GLOB SCTX_SCHEMAS sctx_schemas/*.fbs)
 
 # choosing build type
 if(WK_BUILD_SHARED)
@@ -34,3 +35,19 @@ set_target_properties(${TARGET} PROPERTIES
 
 # setup project
 wk_project_setup(${TARGET})
+
+# SCTX
+wk_flatbuffers_generate_headers(
+    TARGET SCTX_API
+    INCLUDE_PREFIX texture/SCTX
+    SCHEMAS ${SCTX_SCHEMAS}
+    FLAGS --cpp-std=c++17
+)
+
+set_target_properties(${TARGET} PROPERTIES
+    FOLDER SupercellSDK/core
+)
+
+target_link_libraries(${TARGET}
+    PUBLIC SCTX_API
+)

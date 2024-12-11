@@ -1,0 +1,34 @@
+namespace sc.texture.SCTX;
+
+table StreamingTextureDescriptor
+{
+    pixel_type: uint;
+    width: ushort;
+    height: ushort;
+    data: [ubyte];
+}
+
+table TextureVariants
+{
+    streaming_id: [int];
+    streaming_textures: [StreamingTextureDescriptor]; 
+}
+
+table TextureData
+{
+    unk1: int;
+    pixel_type: uint;
+    width: ushort;
+    height: ushort;
+    mip_maps_count: int = 1;
+    unk3: int;
+    unk4: int;
+    texture_length: int;
+    unk5: int;
+    unk6: int;
+    variants: TextureVariants;
+}
+
+file_identifier "SCTX";
+file_extension "sctx";
+root_type TextureData;

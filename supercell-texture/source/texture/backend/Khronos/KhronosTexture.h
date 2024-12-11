@@ -7,6 +7,7 @@
 #include "core/memory/memory.h"
 #include "core/preprocessor/api.h"
 
+#include "core/io/shared_memory_stream.h"
 #include "core/io/buffer_stream.h"
 #include "core/io/memory_stream.h"
 #include "core/image/raw_image.h"
@@ -40,7 +41,7 @@ namespace sc
 				GL_COMPRESSED_RGBA_ASTC_5x5 = 0x93B2,
 				GL_COMPRESSED_RGBA_ASTC_6x6 = 0x93B4,
 				GL_COMPRESSED_RGBA_ASTC_8x8 = 0x93B7,
-			};
+			};	
 
 			enum class glType : uint32_t {
 				COMPRESSED = 0,
