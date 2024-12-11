@@ -4,7 +4,7 @@ table MipMap
 {
     width: ushort;
     height: ushort;
-    unknown_length: uint;
+    offset: uint;
     hash: [ubyte];
 }
 

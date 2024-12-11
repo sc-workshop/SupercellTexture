@@ -1,10 +1,11 @@
 #pragma once
 
 #include "ScPixel.hpp"
-#include "ScMipMap.h"
+#include "ScTextureLevel.h"
 
 #include "texture/interface/compressed_image.h"
 #include "core/io/memory_stream.h"
+#include "core/io/shared_memory_stream.h"
 #include "core/io/file_stream.h"
 
 #include <filesystem>
@@ -16,8 +17,7 @@ namespace sc::texture
 	{
 	public:
 		using IdArray = std::vector<uint32_t>;
-		using StreamingTextureArray = std::vector<SupercellTexture>;
-		using MipMapsArray = std::vector<ScMipMap>;
+		using VariantsArray = std::vector<SupercellTexture>;
 
 	private:
 		using StreamT = wk::InputFileStream;
@@ -43,13 +43,16 @@ namespace sc::texture
 
 		bool read_data();
 
-	public:
-		virtual std::size_t decompressed_data_length()
-		{
-			return Image::calculate_image_length(m_width, m_height, depth());
-		}
+		size_t level_count() const;
 
+		const ScTextureLevel& get_level(size_t index) const;
+
+	public:
+		virtual std::size_t decompressed_data_length();
 		virtual void decompress_data(wk::Stream& buffer);
+
+		virtual std::size_t decompressed_data_length(size_t level);
+		virtual void decompress_data(wk::Stream& buffer, size_t level);
 
 	public:
 		static void decompress_data(uint16_t width, uint16_t height, ScPixel::Type type, wk::Stream& input, wk::Stream& output);
@@ -61,9 +64,8 @@ namespace sc::texture
 		void read_streaming_data();
 
 	public:
-		std::optional<StreamingTextureArray> streaming_textures;
+		std::optional<VariantsArray> streaming_variants;
 		std::optional<IdArray> streaming_ids;
-		std::optional<MipMapsArray> mip_maps;
 
 		uint32_t unknown_integer = 0;
 
@@ -73,5 +75,6 @@ namespace sc::texture
 
 		wk::Ref<wk::MemoryStream> m_data;
 		wk::Ref<StreamT> m_stream;
+		std::vector<ScTextureLevel> m_levels;
 	};
 }

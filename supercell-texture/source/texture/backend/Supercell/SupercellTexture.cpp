@@ -38,40 +38,43 @@ namespace sc::texture
 			}
 		}
 		
-		uint32_t mip_maps_count;
+		uint32_t levels_count;
 
 		{
 			const SCTX::TextureData* texture = SCTX::GetTextureData(texture_data.data());
 			m_pixel_type = (ScPixel::Type)texture->pixel_type();
 			m_width = texture->width();
 			m_height = texture->height();
-			mip_maps_count = texture->mip_maps_count();
+			levels_count = texture->levels_count();
 			unknown_integer = texture->unk4(); // usually 12/11/10
 			m_texture_data_length = texture->texture_length();
 
 			auto* variants = texture->variants();
-			auto ids = variants->streaming_id();
-			auto variants_data = variants->streaming_textures();
-			if (ids)
+			if (variants)
 			{
-				streaming_ids = IdArray(ids->begin(), ids->end());
-			}
-
-			if (variants_data)
-			{
-				streaming_textures = StreamingTextureArray();
-				streaming_textures->reserve(variants_data->size());
-
-				for (std::size_t i = 0; variants_data->size() > i; i++)
+				auto ids = variants->streaming_id();
+				auto variants_data = variants->streaming_textures();
+				if (ids)
 				{
-					auto texture_variant = variants_data->Get(i);
-					auto texture_variant_data = texture_variant->data();
-					Ref<MemoryStream> texture_variant_data_buffer = CreateRef<MemoryStream>(texture_variant_data->size());
+					streaming_ids = IdArray(ids->begin(), ids->end());
+				}
 
-					streaming_textures->emplace_back(
-						texture_variant->width(), texture_variant->height(),
-						(ScPixel::Type)texture_variant->pixel_type(), texture_variant_data_buffer
-					);
+				if (variants_data)
+				{
+					streaming_variants = VariantsArray();
+					streaming_variants->reserve(variants_data->size());
+
+					for (std::size_t i = 0; variants_data->size() > i; i++)
+					{
+						auto texture_variant = variants_data->Get(i);
+						auto texture_variant_data = texture_variant->data();
+						Ref<MemoryStream> texture_variant_data_buffer = CreateRef<MemoryStream>(texture_variant_data->size());
+
+						streaming_variants->emplace_back(
+							texture_variant->width(), texture_variant->height(),
+							(ScPixel::Type)texture_variant->pixel_type(), texture_variant_data_buffer
+						);
+					}
 				}
 			}
 		}
@@ -80,10 +83,8 @@ namespace sc::texture
 		size_t texture_data_offset = m_stream->position() + mip_maps_data_length;
 
 		{
-			mip_maps = MipMapsArray();
-			mip_maps->reserve(mip_maps_count);
-
-			for (uint32_t i = 0; mip_maps_count > i; i++)
+			m_levels.reserve(levels_count);
+			for (uint32_t i = 0; levels_count > i; i++)
 			{
 				uint32_t mip_map_data_length = m_stream->read_unsigned_int();
 				wk::MemoryStream mip_map_buffer(mip_map_data_length);
@@ -94,7 +95,7 @@ namespace sc::texture
 				wk::MemoryStream mip_map_hash(mip_map_data->hash()->size());
 				wk::Memory::copy(mip_map_data->hash()->data(), mip_map_hash.data(), mip_map_hash.length());
 
-				mip_maps->emplace_back(mip_map_data->width(), mip_map_data->height(), mip_map_data->unknown_length(), mip_map_hash);
+				m_levels.emplace_back(mip_map_data->width(), mip_map_data->height(), mip_map_data->offset(), mip_map_hash);
 			}
 		}
 
@@ -162,11 +163,40 @@ namespace sc::texture
 		return true;
 	}
 
-	void SupercellTexture::decompress_data(wk::Stream& buffer)
+	size_t SupercellTexture::level_count() const
+	{
+		return m_levels.size();
+	}
+
+	const ScTextureLevel& SupercellTexture::get_level(size_t index) const
+	{
+		return m_levels[index];
+	}
+
+	std::size_t SupercellTexture::decompressed_data_length(size_t level_idx)
+	{
+		const ScTextureLevel& level = m_levels[level_idx];
+		return Image::calculate_image_length(m_width, m_height, depth());
+	}
+
+	void SupercellTexture::decompress_data(wk::Stream& buffer, size_t level_idx)
 	{
 		if (!m_data) return;
 
-		SupercellTexture::decompress_data(m_width, m_height, m_pixel_type, *m_data, buffer);
+		const ScTextureLevel& level = m_levels[level_idx];
+		wk::SharedMemoryStream stream((uint8_t*)m_data->data() + level.offset, m_data->length() - level.offset);
+
+		SupercellTexture::decompress_data(m_width, m_height, m_pixel_type, stream, buffer);
+	}
+
+	std::size_t SupercellTexture::decompressed_data_length()
+	{
+		return decompressed_data_length(0);
+	}
+
+	void SupercellTexture::decompress_data(wk::Stream& buffer)
+	{
+		decompress_data(buffer, 0);
 	}
 
 	void SupercellTexture::write(wk::Stream& buffer)

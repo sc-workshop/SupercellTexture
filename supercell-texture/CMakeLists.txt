@@ -25,9 +25,7 @@ target_sources(${TARGET} PRIVATE ${HEADERS} ${SOURCES})
 
 # include directories
 target_include_directories(${TARGET} PUBLIC source)
-
-target_link_libraries(${TARGET} PUBLIC wk::core)
-target_link_libraries(${TARGET} PUBLIC supercell::compression)
+target_link_libraries(${TARGET} PUBLIC wk::core supercell::compression)
 
 set_target_properties(${TARGET} PROPERTIES
     FOLDER SupercellSDK/core
