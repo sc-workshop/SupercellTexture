@@ -217,7 +217,7 @@ namespace sc::texture
 			case ScPixel::Type::ASTC_RGBA8_10x10:
 			case ScPixel::Type::ASTC_RGBA8_12x10:
 			case ScPixel::Type::ASTC_RGBA8_12x12:
-				return wk::Image::PixelDepth::RGB8;
+				return wk::Image::PixelDepth::RGBA8;
 
 			default:
 				throw wk::Exception("Unsupported pixel type!");
