@@ -15,6 +15,8 @@ namespace sc::texture
 	{
 		m_width = width;
 		m_height = height;
+		std::vector<uint8_t> hash;
+		m_levels.emplace_back(width, height, 0, hash);
 	}
 
 	SupercellTexture::SupercellTexture(std::filesystem::path path)
@@ -68,11 +70,16 @@ namespace sc::texture
 					{
 						auto texture_variant = variants_data->Get(i);
 						auto texture_variant_data = texture_variant->data();
-						Ref<MemoryStream> texture_variant_data_buffer = CreateRef<MemoryStream>(texture_variant_data->size());
+						Ref<MemoryStream> variant_stream = CreateRef<MemoryStream>(texture_variant_data->size());
+						Memory::copy(
+							(uint8_t*)texture_variant_data->data(),
+							(uint8_t*)variant_stream->data(),
+							texture_variant_data->size()
+						);
 
 						streaming_variants->emplace_back(
 							texture_variant->width(), texture_variant->height(),
-							(ScPixel::Type)texture_variant->pixel_type(), texture_variant_data_buffer
+							(ScPixel::Type)texture_variant->pixel_type(), variant_stream
 						);
 					}
 				}
@@ -92,10 +99,8 @@ namespace sc::texture
 
 				auto mip_map_data = SCTX::GetMipMap(mip_map_buffer.data());
 
-				wk::MemoryStream mip_map_hash(mip_map_data->hash()->size());
-				wk::Memory::copy(mip_map_data->hash()->data(), mip_map_hash.data(), mip_map_hash.length());
-
-				m_levels.emplace_back(mip_map_data->width(), mip_map_data->height(), mip_map_data->offset(), mip_map_hash);
+				std::vector<uint8_t> hash(mip_map_data->hash()->begin(), mip_map_data->hash()->end());
+				m_levels.emplace_back(mip_map_data->width(), mip_map_data->height(), mip_map_data->offset(), hash);
 			}
 		}
 
