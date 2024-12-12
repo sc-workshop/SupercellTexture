@@ -9,6 +9,7 @@ namespace sc
 	class ScTextureLevel
 	{
 	public:
+		ScTextureLevel() = default;
 		ScTextureLevel(uint16_t _width, uint16_t _height, uint32_t _offset, std::vector<uint8_t>& _hash) : width(_width), height(_height), offset(_offset), hash(_hash)
 		{
 

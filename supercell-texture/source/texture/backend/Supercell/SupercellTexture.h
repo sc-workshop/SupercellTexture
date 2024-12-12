@@ -8,6 +8,7 @@
 #include "core/io/shared_memory_stream.h"
 #include "core/io/buffer_stream.h"
 #include "core/io/file_stream.h"
+#include "core/image/raw_image.h"
 
 #include <filesystem>
 #include <optional>
@@ -24,8 +25,14 @@ namespace sc::texture
 		using StreamT = wk::InputFileStream;
 
 	public:
+		// Texture variant constructor
 		SupercellTexture(uint16_t width, uint16_t height, ScPixel::Type type, wk::Ref<wk::MemoryStream> buffer);
+
+		// File constructor
 		SupercellTexture(std::filesystem::path path);
+
+		// New SCTX texture constructor
+		SupercellTexture(wk::RawImage& image, ScPixel::Type type, bool generate_mip_maps = false);
 
 	public:
 		virtual void write(wk::Stream& buffer);
@@ -65,9 +72,12 @@ namespace sc::texture
 
 	private:
 		static void decompress_astc(uint16_t width, uint16_t height, ScPixel::Type type, wk::Stream& input, wk::Stream& output);
+		static void compress_astc(uint16_t width, uint16_t height, ScPixel::Type type, wk::Stream& input, wk::Stream& output);
 
 	private:
 		void read_streaming_data();
+		void generate_mip_maps(wk::RawImage& image);
+		void create_new_level(wk::RawImage& image);
 
 	public:
 		std::optional<VariantsArray> streaming_variants;
@@ -76,11 +86,12 @@ namespace sc::texture
 		uint32_t unknown_integer = 0;
 
 	private:
-		ScPixel::Type m_pixel_type = ScPixel::Type::UNKNOWN;
+		ScPixel::Type m_pixel_type = ScPixel::Type::NONE;
 		size_t m_texture_data_length = 0;
 
-		wk::Ref<wk::MemoryStream> m_data;
+		wk::Ref<wk::Stream> m_data;
 		wk::Ref<StreamT> m_stream;
+
 		std::vector<ScTextureLevel> m_levels;
 	};
 }

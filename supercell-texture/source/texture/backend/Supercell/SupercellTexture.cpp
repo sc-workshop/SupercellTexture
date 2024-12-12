@@ -25,6 +25,24 @@ namespace sc::texture
 		read_streaming_data();
 	}
 
+	SupercellTexture::SupercellTexture(wk::RawImage& image, ScPixel::Type type, bool mip_maps)
+	{
+		// Writable dynamic buffer
+		m_data = wk::CreateRef<wk::BufferStream>();
+
+		m_pixel_type = type;
+		m_width = image.width();
+		m_height = image.height();
+
+		// Level 0
+		create_new_level(image);
+
+		if (mip_maps)
+		{
+			generate_mip_maps(image);
+		}
+	}
+
 	void SupercellTexture::read_streaming_data()
 	{
 		uint32_t texture_data_length = m_stream->read_unsigned_int();
@@ -107,6 +125,60 @@ namespace sc::texture
 		m_stream->seek(texture_data_offset);
 	}
 
+	void SupercellTexture::generate_mip_maps(wk::RawImage& image)
+	{
+		float width = (float)image.width();
+		float height = (float)image.height();
+		while (true)
+		{
+
+			width = width / 2.0f;
+			height = height / 2.0f;
+			if (1.0f > width && 1.0f > height) break;
+
+			wk::RawImage mip_map(
+				1.0f > width ? 1 : (uint16_t)std::ceil(width),
+				1.0f > height ? 1 : (uint16_t)std::ceil(height),
+				image.depth(), image.colorspace()
+			);
+
+			image.copy(mip_map);
+			create_new_level(mip_map);
+		}
+	}
+
+	void SupercellTexture::create_new_level(wk::RawImage& image)
+	{
+		if (!m_data) return;
+		if (!m_data->is_writable()) return;
+
+		ScPixel::Compression compression = ScPixel::get_compression(m_pixel_type);
+		wk::SharedMemoryStream input(image.data(), image.data_length());
+
+		size_t data_begin = m_data->position();
+
+		switch (compression)
+		{
+		case ScPixel::Compression::ASTC:
+			SupercellTexture::compress_astc(image.width(), image.height(), m_pixel_type, input, *m_data);
+			break;
+		default:
+			throw wk::Exception("Unsupported compression!");
+			break;
+		}
+
+		size_t data_end = m_data->position();
+		size_t level_index = m_levels.size();
+
+		ScTextureLevel& level = m_levels.emplace_back();
+		level.width = image.width();
+		level.height = image.height();
+		level.offset = (uint32_t)data_begin;
+
+		wk::SharedMemoryStream hash_stream(data(level_index), data_end - data_begin);
+		// TODO hash
+	}
+
 	bool SupercellTexture::read_data()
 	{
 		if (!m_stream) return false;
@@ -167,7 +239,7 @@ namespace sc::texture
 		if (!m_data) return nullptr;
 
 		const ScTextureLevel& level = get_level(level_index);
-		return (std::uint8_t*)m_data->data_ref() + level.offset;
+		return (std::uint8_t*)m_data->data() + level.offset;
 	}
 
 	void SupercellTexture::clear()
@@ -228,7 +300,7 @@ namespace sc::texture
 	void SupercellTexture::write(wk::Stream& buffer, bool compress_data)
 	{
 		using namespace flatbuffers;
-		FlatBufferBuilder builder;
+		FlatBufferBuilder builder(1024);
 		builder.TrackMinAlign(16);
 
 		// Data chunk
@@ -286,7 +358,21 @@ namespace sc::texture
 		}
 		
 		// Data itself
-		buffer.write(m_data->data(), m_data->length());
+		if (compress_data)
+		{
+			ZstdCompressor::Props props;
+			props.compression_level = 16;
+			props.checksum_flag = false;
+			props.content_size_flag = true;
+
+			ZstdCompressor compressor(props);
+			m_data->seek(0);
+			compressor.compress(*m_data, buffer);
+		}
+		else
+		{
+			buffer.write(m_data->data(), m_data->length());
+		}
 	}
 
 	void SupercellTexture::decompress_data(uint16_t width, uint16_t height, ScPixel::Type type, wk::Stream& input, wk::Stream& output)
@@ -318,5 +404,17 @@ namespace sc::texture
 			width, height, Image::BasePixelType::RGBA,
 			input, output
 		);
+	}
+
+	void SupercellTexture::compress_astc(uint16_t width, uint16_t height, ScPixel::Type type, wk::Stream& input, wk::Stream& output)
+	{
+		auto [x, y, z] = ScPixel::get_astc_blocks(type);
+
+		ASTCCompressor::Props props;
+		props.blocks_x = x;
+		props.blocks_y = y;
+
+		ASTCCompressor context(props);
+		context.compress(width, height, ScPixel::get_base_pixel_type(type), input, output);
 	}
 }

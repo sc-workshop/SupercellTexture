@@ -3,6 +3,8 @@
 #include "core/image/image.h"
 #include "core/exception/exception.h"
 
+#include <unordered_map>
+
 namespace sc::texture
 {
 	class ScPixel
@@ -10,10 +12,11 @@ namespace sc::texture
 	public:
 		ScPixel() = delete; // Static class
 
+
 	public:
 		enum class Type
 		{
-			UNKNOWN = 0,
+			NONE = 0,
 
 			// ETC2 / EAC
 			EAC_R11 = 170,
@@ -393,5 +396,70 @@ namespace sc::texture
 
 			return std::make_tuple(x, y, z);
 		}
+
+		static std::string to_string(const ScPixel::Type type)
+		{
+			return ScPixel::string_map.at(type);
+		}
+
+		static ScPixel::Type from_string(std::string type)
+		{
+			auto result = std::find_if(ScPixel::string_map.begin(), ScPixel::string_map.end(), [&type](const std::pair<ScPixel::Type, std::string>& pair)
+				{
+					return pair.second == type;
+				});
+
+			if (result == ScPixel::string_map.end())
+			{
+				return ScPixel::Type::NONE;
+			}
+			else
+			{
+				return result->first;
+			}
+		}
+
+	private:
+			static const inline std::unordered_map<ScPixel::Type, std::string> string_map = {
+				{ScPixel::Type::EAC_R11, "EAC_R11"},
+				{ScPixel::Type::EAC_SIGNED_R11, "EAC_SIGNED_R11"},
+				{ScPixel::Type::EAC_RG11, "EAC_RG11"},
+				{ScPixel::Type::ETC2_EAC_RGBA8, "ETC2_EAC_RGBA8"},
+				{ScPixel::Type::ETC2_EAC_SRGBA8, "ETC2_EAC_SRGBA8"},
+				{ScPixel::Type::ETC2_RGB8, "ETC2_RGB8"},
+				{ScPixel::Type::ETC2_SRGB8, "ETC2_SRGB8"},
+				{ScPixel::Type::ETC2_RGB8_PUNCHTHROUGH_ALPHA1, "ETC2_RGB8_PUNCHTHROUGH_ALPHA1"},
+				{ScPixel::Type::ETC2_SRGB8_PUNCHTHROUGH_ALPHA1, "ETC2_SRGB8_PUNCHTHROUGH_ALPHA1"},
+
+				{ScPixel::Type::ASTC_SRGBA8_4x4, "ASTC_SRGBA8_4x4"},
+				{ScPixel::Type::ASTC_SRGBA8_5x4, "ASTC_SRGBA8_5x4"},
+				{ScPixel::Type::ASTC_SRGBA8_5x5, "ASTC_SRGBA8_5x5"},
+				{ScPixel::Type::ASTC_SRGBA8_6x5, "ASTC_SRGBA8_6x5"},
+				{ScPixel::Type::ASTC_SRGBA8_6x6, "ASTC_SRGBA8_6x6"},
+				{ScPixel::Type::ASTC_SRGBA8_8x5, "ASTC_SRGBA8_8x5"},
+				{ScPixel::Type::ASTC_SRGBA8_8x6, "ASTC_SRGBA8_8x6"},
+				{ScPixel::Type::ASTC_SRGBA8_8x8, "ASTC_SRGBA8_8x8"},
+				{ScPixel::Type::ASTC_SRGBA8_10x5, "ASTC_SRGBA8_10x5"},
+				{ScPixel::Type::ASTC_SRGBA8_10x6, "ASTC_SRGBA8_10x6"},
+				{ScPixel::Type::ASTC_SRGBA8_10x8, "ASTC_SRGBA8_10x8"},
+				{ScPixel::Type::ASTC_SRGBA8_10x10, "ASTC_SRGBA8_10x10"},
+				{ScPixel::Type::ASTC_SRGBA8_12x10, "ASTC_SRGBA8_12x10"},
+				{ScPixel::Type::ASTC_SRGBA8_12x12, "ASTC_SRGBA8_12x12"},
+
+				{ScPixel::Type::ASTC_RGBA8_4x4, "ASTC_RGBA8_4x4"},
+				{ScPixel::Type::ASTC_RGBA8_5x4, "ASTC_RGBA8_5x4"},
+				{ScPixel::Type::ASTC_RGBA8_5x5, "ASTC_RGBA8_5x5"},
+				{ScPixel::Type::ASTC_RGBA8_6x5, "ASTC_RGBA8_6x5"},
+				{ScPixel::Type::ASTC_RGBA8_6x6, "ASTC_RGBA8_6x6"},
+				{ScPixel::Type::ASTC_RGBA8_8x5, "ASTC_RGBA8_8x5"},
+				{ScPixel::Type::ASTC_RGBA8_8x6, "ASTC_RGBA8_8x6"},
+				{ScPixel::Type::ASTC_RGBA8_8x8, "ASTC_RGBA8_8x8"},
+				{ScPixel::Type::ASTC_RGBA8_10x5, "ASTC_RGBA8_10x5"},
+				{ScPixel::Type::ASTC_RGBA8_10x6, "ASTC_RGBA8_10x6"},
+				{ScPixel::Type::ASTC_RGBA8_10x8, "ASTC_RGBA8_10x8"},
+				{ScPixel::Type::ASTC_RGBA8_10x10, "ASTC_RGBA8_10x10"},
+				{ScPixel::Type::ASTC_RGBA8_12x10, "ASTC_RGBA8_12x10"},
+				{ScPixel::Type::ASTC_RGBA8_12x12, "ASTC_RGBA8_12x12"}
+			};
 	};
 }
