@@ -22,7 +22,7 @@ table TextureData
     height: ushort;
     levels_count: ubyte = 1;
     unk3: int = 0;
-    unk4: int = 0;
+    flags: int = 0;
     texture_length: int;
     unk5: int = 0;
     unk6: int = 0;

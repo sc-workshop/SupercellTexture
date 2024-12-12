@@ -5,6 +5,7 @@
 #include "texture/SCTX/MipMapData_generated.h"
 
 #include "compression/compression.h"
+#include "core/crypto/fnv.h"
 
 using namespace wk;
 
@@ -66,7 +67,7 @@ namespace sc::texture
 			m_width = texture->width();
 			m_height = texture->height();
 			levels_count = texture->levels_count();
-			unknown_integer = texture->unk4(); // usually 12/11/10
+			flags = texture->flags();
 			m_texture_data_length = texture->texture_length();
 
 			auto* variants = texture->variants();
@@ -175,8 +176,9 @@ namespace sc::texture
 		level.height = image.height();
 		level.offset = (uint32_t)data_begin;
 
-		wk::SharedMemoryStream hash_stream(data(level_index), data_end - data_begin);
-		// TODO hash
+		uint64_t texture_hash = Fnv::fnv1a64(data(level_index), data_end - data_begin);
+		level.hash.resize(sizeof(uint64_t));
+		wk::Memory::copy(&texture_hash, level.hash.data(), level.hash.size());
 	}
 
 	bool SupercellTexture::read_data()
@@ -330,7 +332,7 @@ namespace sc::texture
 			Offset<SCTX::TextureData> off_texture_data = SCTX::CreateTextureData(
 				builder, 0,
 				(uint32_t)m_pixel_type, m_width, m_height, m_levels.size(),
-				0, unknown_integer, (uint32_t)m_data->length(), 0, 0, off_texture_variants
+				0, flags, (uint32_t)m_data->length(), 0, 0, off_texture_variants
 			);
 
 			builder.FinishSizePrefixed(off_texture_data, SCTX::TextureDataIdentifier());

@@ -83,7 +83,7 @@ namespace sc::texture
 		std::optional<VariantsArray> streaming_variants;
 		std::optional<IdArray> streaming_ids;
 
-		uint32_t unknown_integer = 0;
+		uint32_t flags = 0;
 
 	private:
 		ScPixel::Type m_pixel_type = ScPixel::Type::NONE;
