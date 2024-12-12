@@ -10,7 +10,7 @@ table StreamingTextureDescriptor
 
 table TextureVariants
 {
-    streaming_id: [int];
+    streaming_id: [uint];
     streaming_textures: [StreamingTextureDescriptor]; 
 }
 

@@ -6,6 +6,7 @@
 #include "texture/interface/compressed_image.h"
 #include "core/io/memory_stream.h"
 #include "core/io/shared_memory_stream.h"
+#include "core/io/buffer_stream.h"
 #include "core/io/file_stream.h"
 
 #include <filesystem>
@@ -28,6 +29,7 @@ namespace sc::texture
 
 	public:
 		virtual void write(wk::Stream& buffer);
+		void write(wk::Stream& buffer, bool compress_data);
 
 	public:
 		virtual BasePixelType base_type() const;
@@ -37,6 +39,9 @@ namespace sc::texture
 		virtual std::size_t data_length() const;
 		virtual std::uint8_t* data() const;
 
+		virtual std::size_t data_length(size_t level_index) const;
+		virtual std::uint8_t* data(size_t level_index) const;
+
 		virtual bool is_compressed() const;
 
 		void clear();
@@ -44,6 +49,7 @@ namespace sc::texture
 		bool read_data();
 
 		size_t level_count() const;
+		const ScPixel::Type pixel_type() const;
 
 		const ScTextureLevel& get_level(size_t index) const;
 
