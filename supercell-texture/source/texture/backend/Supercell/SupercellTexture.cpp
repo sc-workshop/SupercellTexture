@@ -154,20 +154,34 @@ namespace sc::texture
 		if (!m_data->is_writable()) return;
 
 		ScPixel::Compression compression = ScPixel::get_compression(m_pixel_type);
-		wk::SharedMemoryStream input(image.data(), image.data_length());
+		auto do_compress = [&compression, this](wk::RawImage& image)
+			{
+				wk::SharedMemoryStream input(image.data(), image.data_length());
+				switch (compression)
+				{
+				case ScPixel::Compression::ASTC:
+					SupercellTexture::compress_astc(image.width(), image.height(), m_pixel_type, input, *m_data);
+					break;
+				default:
+					throw wk::Exception("Unsupported compression!");
+					break;
+				}
+			};
 
 		size_t data_begin = m_data->position();
 
-		switch (compression)
+		if (ScPixel::get_depth(m_pixel_type) != image.depth())
 		{
-		case ScPixel::Compression::ASTC:
-			SupercellTexture::compress_astc(image.width(), image.height(), m_pixel_type, input, *m_data);
-			break;
-		default:
-			throw wk::Exception("Unsupported compression!");
-			break;
-		}
+			wk::RawImage temp(image.width(), image.height(), ScPixel::get_depth(m_pixel_type), image.colorspace());
+			image.copy(temp);
 
+			do_compress(temp);
+		}
+		else
+		{
+			do_compress(image);
+		}
+		
 		size_t data_end = m_data->position();
 		size_t level_index = m_levels.size();
 
