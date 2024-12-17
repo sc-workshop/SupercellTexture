@@ -36,7 +36,6 @@ namespace sc::texture
 
 	public:
 		virtual void write(wk::Stream& buffer);
-		void write(wk::Stream& buffer, bool compress_data);
 
 	public:
 		virtual BasePixelType base_type() const;
@@ -67,6 +66,9 @@ namespace sc::texture
 		virtual std::size_t decompressed_data_length(size_t level);
 		virtual void decompress_data(wk::Stream& buffer, size_t level);
 
+		void set_data_flags(uint32_t flags);
+		uint32_t get_data_flags() const;
+
 	public:
 		static void decompress_data(uint16_t width, uint16_t height, ScPixel::Type type, wk::Stream& input, wk::Stream& output);
 
@@ -83,7 +85,10 @@ namespace sc::texture
 		std::optional<VariantsArray> streaming_variants;
 		std::optional<IdArray> streaming_ids;
 
-		uint32_t flags = 0;
+		bool use_compression = false;
+		bool unknown_flag1 = false;
+		bool unknown_flag2 = false;
+		bool use_padding = false;
 
 	private:
 		ScPixel::Type m_pixel_type = ScPixel::Type::NONE;

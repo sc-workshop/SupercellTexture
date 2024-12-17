@@ -67,8 +67,9 @@ namespace sc::texture
 			m_width = texture->width();
 			m_height = texture->height();
 			levels_count = texture->levels_count();
-			flags = texture->flags();
 			m_texture_data_length = texture->texture_length();
+
+			set_data_flags((uint32_t)texture->flags());
 
 			auto* variants = texture->variants();
 			if (variants)
@@ -85,7 +86,7 @@ namespace sc::texture
 					streaming_variants = VariantsArray();
 					streaming_variants->reserve(variants_data->size());
 
-					for (std::size_t i = 0; variants_data->size() > i; i++)
+					for (flatbuffers::Vector<SCTX::TextureVariants>::size_type i = 0; variants_data->size() > i; i++)
 					{
 						auto texture_variant = variants_data->Get(i);
 						auto texture_variant_data = texture_variant->data();
@@ -200,6 +201,11 @@ namespace sc::texture
 		if (!m_stream) return false;
 		if (m_texture_data_length == 0) return false;
 
+		if (use_padding)
+		{
+			m_stream->seek((m_stream->position() + 15) & ~15);
+		}
+
 		m_data = wk::CreateRef<wk::MemoryStream>(m_texture_data_length);
 		bool is_compressed = ZstdDecompressor::validate(*m_stream);
 
@@ -285,7 +291,11 @@ namespace sc::texture
 
 	std::size_t SupercellTexture::decompressed_data_length(size_t level_idx)
 	{
-		return Image::calculate_image_length(m_width, m_height, depth());
+		if (!m_data) return 0;
+
+		const ScTextureLevel& level = get_level(level_idx);
+
+		return Image::calculate_image_length(level.width, level.height, depth());
 	}
 
 	void SupercellTexture::decompress_data(wk::Stream& buffer, size_t level_idx)
@@ -310,14 +320,8 @@ namespace sc::texture
 
 	void SupercellTexture::write(wk::Stream& buffer)
 	{
-		write(buffer, false);
-	}
-
-	void SupercellTexture::write(wk::Stream& buffer, bool compress_data)
-	{
 		using namespace flatbuffers;
-		FlatBufferBuilder builder(1024);
-		builder.TrackMinAlign(16);
+		FlatBufferBuilder builder(2048);
 
 		// Data chunk
 		{
@@ -345,12 +349,13 @@ namespace sc::texture
 
 			Offset<SCTX::TextureData> off_texture_data = SCTX::CreateTextureData(
 				builder, 0,
-				(uint32_t)m_pixel_type, m_width, m_height, m_levels.size(),
-				0, flags, (uint32_t)m_data->length(), 0, 0, off_texture_variants
+				(uint32_t)m_pixel_type, m_width, m_height, (uint8_t)m_levels.size(),
+				0, (SCTX::TextureFlags)get_data_flags(), (uint32_t)m_data->length(), 0, 0,
+				off_texture_variants
 			);
 
 			builder.FinishSizePrefixed(off_texture_data, SCTX::TextureDataIdentifier());
-			
+
 			auto texture_data = builder.GetBufferSpan();
 			buffer.write(texture_data.data(), (uint32_t)texture_data.size_bytes());
 			builder.Clear();
@@ -369,12 +374,21 @@ namespace sc::texture
 				builder.Clear();
 			}
 
-			buffer.write_unsigned_int(mip_maps.length());
+			buffer.write_unsigned_int((uint32_t)mip_maps.length());
 			buffer.write(mip_maps.data(), mip_maps.length());
 		}
-		
+
+		if (use_padding)
+		{
+			size_t pad_bytes = ((buffer.position() + 15) & ~15) - buffer.position();
+			for (size_t i = 0; pad_bytes > i; i++)
+			{
+				buffer.write_unsigned_byte(0);
+			}
+		}
+
 		// Data itself
-		if (compress_data)
+		if (use_compression)
 		{
 			ZstdCompressor::Props props;
 			props.compression_level = 16;
@@ -404,6 +418,30 @@ namespace sc::texture
 		default:
 			throw wk::Exception("Unsupported compression!");
 		}
+	}
+
+	void SupercellTexture::set_data_flags(uint32_t flags)
+	{
+		using SCTX::TextureFlags;
+
+		use_compression = (flags & (uint32_t)TextureFlags::use_compression) > 0;
+		unknown_flag1 = (flags & (uint32_t)TextureFlags::unknown_flag2) > 0;
+		unknown_flag2 = (flags & (uint32_t)TextureFlags::unknown_flag3) > 0;
+		use_padding = (flags & (uint32_t)TextureFlags::use_padding) > 0;
+	}
+
+	uint32_t SupercellTexture::get_data_flags() const
+	{
+		using SCTX::TextureFlags;
+
+		uint8_t result = 0;
+
+		if (use_compression) result |= (uint32_t)TextureFlags::use_compression;
+		if (unknown_flag1) result |= (uint32_t)TextureFlags::unknown_flag2;
+		if (unknown_flag2) result |= (uint32_t)TextureFlags::unknown_flag3;
+		if (use_padding) result |= (uint32_t)TextureFlags::use_padding;
+
+		return result;
 	}
 
 	void SupercellTexture::decompress_astc(uint16_t width, uint16_t height, ScPixel::Type type, wk::Stream& input, wk::Stream& output)

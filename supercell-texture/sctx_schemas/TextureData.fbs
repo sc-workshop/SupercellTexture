@@ -14,6 +14,13 @@ table TextureVariants
     streaming_textures: [StreamingTextureDescriptor]; 
 }
 
+enum TextureFlags : uint(bit_flags) { 
+    use_compression,
+    unknown_flag2,
+    unknown_flag3,
+    use_padding
+}
+
 table TextureData
 {
     unk1: int = 0;
@@ -22,7 +29,7 @@ table TextureData
     height: ushort;
     levels_count: ubyte = 1;
     unk3: int = 0;
-    flags: int = 0;
+    flags: TextureFlags = 0;
     texture_length: int;
     unk5: int = 0;
     unk6: int = 0;
