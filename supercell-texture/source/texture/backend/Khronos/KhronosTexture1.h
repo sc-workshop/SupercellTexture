@@ -52,7 +52,7 @@ namespace sc
 			virtual size_t data_length(uint32_t level_index) const;
 
 			virtual uint8_t* data() const;
-			virtual const wk::BufferStream* data(uint32_t level_index) const;
+			virtual const wk::Ref<wk::Stream> data(uint32_t level_index) const;
 
 			virtual bool is_compressed() const;
 
@@ -97,7 +97,7 @@ namespace sc
 			glFormat m_format;
 			glInternalFormat m_internal_format;
 
-			std::vector<wk::BufferStream*> m_levels;
+			std::vector<wk::Ref<wk::BufferStream>> m_levels;
 		};
 	}
 }
