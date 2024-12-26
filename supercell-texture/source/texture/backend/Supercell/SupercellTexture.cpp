@@ -5,7 +5,7 @@
 #include "texture/SCTX/MipMapData_generated.h"
 
 #include "compression/compression.h"
-#include "core/crypto/fnv.h"
+#include "core/hashing/ncrypto/fnv.h"
 
 using namespace wk;
 
@@ -191,8 +191,9 @@ namespace sc::texture
 		level.height = image.height();
 		level.offset = (uint32_t)data_begin;
 
-		uint64_t texture_hash = Fnv::fnv1a64(data(level_index), data_end - data_begin);
-		level.hash.resize(sizeof(uint64_t));
+		uint64_t texture_hash = hash::fnv1a64(data(level_index), data_end - data_begin);
+
+		level.hash.resize(sizeof(texture_hash));
 		wk::Memory::copy(&texture_hash, level.hash.data(), level.hash.size());
 	}
 
