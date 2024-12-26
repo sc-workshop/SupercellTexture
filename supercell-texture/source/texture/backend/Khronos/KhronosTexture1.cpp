@@ -1,5 +1,8 @@
 #include "KhronosTexture1.h"
 
+#include "core/stb/stb.h"
+#include "core/io/file_stream.h"
+
 using namespace wk;
 
 namespace sc
@@ -19,7 +22,7 @@ namespace sc
 			{
 				uint32_t level_length = buffer.read_unsigned_int();
 
-				m_levels[level_index] = new BufferStream(level_length);
+				m_levels[level_index] = CreateRef<BufferStream>(level_length);
 				buffer.read(m_levels[level_index]->data(), level_length);
 			}
 		}
@@ -39,7 +42,7 @@ namespace sc
 				m_type = glType::COMPRESSED;
 			}
 
-			BufferStream* stream = new BufferStream(buffer_size);
+			auto stream = CreateRef<BufferStream>(buffer_size);
 			Memory::copy(buffer, stream->data(), buffer_size);
 
 			m_levels.push_back(stream);
@@ -60,7 +63,9 @@ namespace sc
 				m_type = glType::GL_UNSIGNED_BYTE;
 			}
 
-			SharedMemoryStream image_data(image.data(), image.data_length());
+			SharedMemoryStream image_data(
+				image.data(), image.data_length()
+			);
 
 			set_level_data(
 				image_data,
@@ -71,10 +76,6 @@ namespace sc
 
 		KhronosTexture1::~KhronosTexture1()
 		{
-			for (BufferStream* level : m_levels)
-			{
-				if (level != nullptr) delete level;
-			}
 		}
 #pragma endregion
 
@@ -130,10 +131,8 @@ namespace sc
 			// bytesOfKeyValueData
 			buffer.write_unsigned_int(0);
 
-			for (BufferStream* level : m_levels)
+			for (auto& level : m_levels)
 			{
-				if (level == nullptr) continue;
-
 				uint32_t image_length = static_cast<uint32_t>(level->length());
 				buffer.write_unsigned_int(image_length);
 				buffer.write(level->data(), image_length);
@@ -143,8 +142,7 @@ namespace sc
 		void KhronosTexture1::decompress_data(Stream& output, uint32_t level_index)
 		{
 			if (level_index >= m_levels.size()) level_index = static_cast<uint32_t>(m_levels.size()) - 1;
-			BufferStream* buffer = m_levels[level_index];
-			if (buffer == nullptr) return;
+			auto& buffer = m_levels[level_index];
 
 			uint16_t level_width = m_width / (uint16_t)pow(2, level_index);
 			uint16_t level_height = m_height / (uint16_t)pow(2, level_index);
@@ -172,35 +170,32 @@ namespace sc
 				m_levels.resize(m_levels.size() + 1);
 			};
 
-			// Free level buffer before some changes if it exist
-			if (m_levels[level_index] != nullptr)
-			{
-				delete m_levels[level_index];
-			}
-
 			// Level final data buffer
-			BufferStream* buffer = new BufferStream();
-
-			uint8_t* image_buffer = nullptr;
-			size_t image_buffer_size = 0;
+			auto buffer = CreateRef<BufferStream>();
+			BufferStream temp_buffer;
+			bool use_temp_buffer = false;
 
 			// Second, we need to convert data base type to current texture type
 			Image::PixelDepth destination_depth = depth();
 
 			if (source_depth != destination_depth)
 			{
-				image_buffer_size = Image::calculate_image_length(m_width, m_height, destination_depth);
-				image_buffer = Memory::allocate(image_buffer_size);
+				temp_buffer.resize(
+					Image::calculate_image_length(m_width, m_height, destination_depth)
+				);
+
 				Image::remap(
-					(uint8_t*)stream.data(), image_buffer,
+					(uint8_t*)stream.data(), (uint8_t*)temp_buffer.data(),
 					m_width, m_height,
 					source_depth, destination_depth
 				);
+
+				use_temp_buffer = true;
 			}
 
 			SharedMemoryStream input_image(
-				image_buffer ? image_buffer : (uint8_t*)stream.data(),
-				image_buffer ? image_buffer_size : stream.length()
+				use_temp_buffer ? (uint8_t*)temp_buffer.data() : (uint8_t*)stream.data(),
+				use_temp_buffer ? temp_buffer.length() : stream.length()
 			);
 
 			switch (compression_type())
@@ -212,7 +207,7 @@ namespace sc
 			default:
 				buffer->resize(input_image.length());
 				Memory::copy(
-					image_buffer ? image_buffer : (uint8_t*)stream.data(),
+					input_image.data(),
 					buffer->data(),
 					input_image.length()
 				);
@@ -262,12 +257,12 @@ namespace sc
 		{
 			auto buffer = data(0);
 
-			if (buffer != nullptr) return (uint8_t*)buffer->data();
+			if (buffer) return (uint8_t*)buffer->data();
 
 			return nullptr;
 		}
 
-		const BufferStream* KhronosTexture1::data(uint32_t level_index) const
+		const Ref<Stream> KhronosTexture1::data(uint32_t level_index) const
 		{
 			if (level_index >= m_levels.size()) level_index = static_cast<uint32_t>(m_levels.size()) - 1;
 

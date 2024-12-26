@@ -93,7 +93,7 @@ namespace sc
 			// Image functions for Khronos mip mapping system
 		public:
 			virtual size_t data_length(uint32_t level_index) const = 0;
-			virtual const wk::BufferStream* data(uint32_t level_index) const = 0;
+			virtual const wk::Ref<wk::Stream> data(uint32_t level_index) const = 0;
 
 			// Khronos V1 format converters
 		public:
