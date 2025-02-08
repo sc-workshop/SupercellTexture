@@ -197,7 +197,7 @@ namespace sc::texture
 		wk::Memory::copy(&texture_hash, level.hash.data(), level.hash.size());
 	}
 
-	bool SupercellTexture::read_data()
+	bool SupercellTexture::read_data() const
 	{
 		if (!m_stream) return false;
 		if (m_texture_data_length == 0) return false;
@@ -222,6 +222,11 @@ namespace sc::texture
 
 		m_stream.reset();
 		return true;
+	}
+
+	bool SupercellTexture::loaded() const
+	{
+		return bool(m_data);
 	}
 
 	Image::BasePixelType SupercellTexture::base_type() const
@@ -259,6 +264,7 @@ namespace sc::texture
 
 	std::uint8_t* SupercellTexture::data(size_t level_index) const
 	{
+		if (!loaded()) read_data();
 		if (!m_data) return nullptr;
 
 		const ScTextureLevel& level = get_level(level_index);
@@ -292,7 +298,7 @@ namespace sc::texture
 
 	std::size_t SupercellTexture::decompressed_data_length(size_t level_idx)
 	{
-		if (!m_data) return 0;
+		if (!loaded()) return 0;
 
 		const ScTextureLevel& level = get_level(level_idx);
 
@@ -301,7 +307,7 @@ namespace sc::texture
 
 	void SupercellTexture::decompress_data(wk::Stream& buffer, size_t level_idx)
 	{
-		if (!m_data) return;
+		if (!loaded()) read_data();
 
 		const ScTextureLevel& level = get_level(level_idx);
 		wk::SharedMemoryStream stream((uint8_t*)m_data->data() + level.offset, m_data->length() - level.offset);
@@ -323,6 +329,12 @@ namespace sc::texture
 	{
 		using namespace flatbuffers;
 		FlatBufferBuilder builder(2048);
+
+		// calling data getter just to load data in case if its not loaded and to make sure that texture is valid
+		if (data() == nullptr)
+		{
+			throw wk::Exception("Texture data is incorrect or empty");
+		}
 
 		// Data chunk
 		{

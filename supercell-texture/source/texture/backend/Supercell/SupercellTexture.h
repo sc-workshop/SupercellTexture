@@ -52,7 +52,8 @@ namespace sc::texture
 
 		void clear();
 
-		bool read_data();
+		bool read_data() const;
+		bool loaded() const;
 
 		size_t level_count() const;
 		const ScPixel::Type pixel_type() const;
@@ -94,8 +95,8 @@ namespace sc::texture
 		ScPixel::Type m_pixel_type = ScPixel::Type::NONE;
 		size_t m_texture_data_length = 0;
 
-		wk::Ref<wk::Stream> m_data;
-		wk::Ref<StreamT> m_stream;
+		mutable wk::Ref<wk::Stream> m_data;
+		mutable wk::Ref<StreamT> m_stream;
 
 		std::vector<ScTextureLevel> m_levels;
 	};
