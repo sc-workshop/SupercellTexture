@@ -35,38 +35,17 @@ namespace sc
 			/// <param name="format"></param>
 			KhronosTexture1(wk::RawImage& image, glInternalFormat format);
 
-			~KhronosTexture1();
-
 		public:
-			virtual KhronosTextureCompression compression_type();
-			virtual uint32_t level_count() const;
+			virtual Version version() const;
+			virtual KhronosTextureCompression compression_type() const;
 
 		public:
 			virtual BasePixelType base_type() const;
-
 			virtual ColorSpace colorspace() const;
-
 			virtual PixelDepth depth() const;
-
-			virtual size_t data_length() const;
-			virtual size_t data_length(uint32_t level_index) const;
-
-			virtual uint8_t* data() const;
-			virtual const wk::Ref<wk::Stream> data(uint32_t level_index) const;
-
-			virtual bool is_compressed() const;
-
-			virtual size_t decompressed_data_length();
-			size_t decompressed_data_length(uint32_t level_index);
 
 		public:
 			virtual void write(wk::Stream& buffer);
-			virtual void decompress_data(wk::Stream& output);
-
-		public:
-			virtual void decompress_data(wk::Stream& output, uint32_t level_index);
-			virtual void set_level_data(wk::Stream& data, Image::PixelDepth data_format, uint32_t level_index);
-			virtual void reset_level_data(uint32_t level_index);
 
 		public:
 			virtual glInternalFormat internal_format() const
@@ -96,8 +75,6 @@ namespace sc
 			glType m_type;
 			glFormat m_format;
 			glInternalFormat m_internal_format;
-
-			std::vector<wk::Ref<wk::BufferStream>> m_levels;
 		};
 	}
 }

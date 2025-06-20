@@ -74,9 +74,6 @@ namespace sc
 			);
 		}
 
-		KhronosTexture1::~KhronosTexture1()
-		{
-		}
 #pragma endregion
 
 #pragma region Functions
@@ -139,90 +136,6 @@ namespace sc
 			}
 		}
 
-		void KhronosTexture1::decompress_data(Stream& output, uint32_t level_index)
-		{
-			if (level_index >= m_levels.size()) level_index = static_cast<uint32_t>(m_levels.size()) - 1;
-			auto& buffer = m_levels[level_index];
-
-			uint16_t level_width = m_width / (uint16_t)pow(2, level_index);
-			uint16_t level_height = m_height / (uint16_t)pow(2, level_index);
-
-			buffer->seek(0);
-			switch (compression_type())
-			{
-			case KhronosTextureCompression::ASTC:
-				decompress_astc(*buffer, output, level_width, level_height);
-				break;
-
-			default:
-				output.write(m_levels[level_index]->data(), m_levels[level_index]->length());
-				break;
-			}
-		}
-
-		void KhronosTexture1::set_level_data(Stream& stream, Image::PixelDepth source_depth, uint32_t level_index)
-		{
-			// First, check if level index is ok
-			// If index out of bound - create new buffer
-			if (level_index >= m_levels.size())
-			{
-				level_index = static_cast<uint32_t>(m_levels.size());
-				m_levels.resize(m_levels.size() + 1);
-			};
-
-			// Level final data buffer
-			auto buffer = CreateRef<BufferStream>();
-			BufferStream temp_buffer;
-			bool use_temp_buffer = false;
-
-			// Second, we need to convert data base type to current texture type
-			Image::PixelDepth destination_depth = depth();
-
-			if (source_depth != destination_depth)
-			{
-				temp_buffer.resize(
-					Image::calculate_image_length(m_width, m_height, destination_depth)
-				);
-
-				Image::remap(
-					(uint8_t*)stream.data(), (uint8_t*)temp_buffer.data(),
-					m_width, m_height,
-					source_depth, destination_depth
-				);
-
-				use_temp_buffer = true;
-			}
-
-			SharedMemoryStream input_image(
-				use_temp_buffer ? (uint8_t*)temp_buffer.data() : (uint8_t*)stream.data(),
-				use_temp_buffer ? temp_buffer.length() : stream.length()
-			);
-
-			switch (compression_type())
-			{
-			case KhronosTextureCompression::ASTC:
-				compress_astc(input_image, *buffer);
-				break;
-
-			default:
-				buffer->resize(input_image.length());
-				Memory::copy(
-					input_image.data(),
-					buffer->data(),
-					input_image.length()
-				);
-				break;
-			}
-
-			m_levels[level_index] = buffer;
-		}
-
-		void KhronosTexture1::reset_level_data(uint32_t level_index)
-		{
-			if (level_index >= m_levels.size()) level_index = static_cast<uint32_t>(m_levels.size()) - 1;
-
-			m_levels.erase(m_levels.begin(), m_levels.begin() + level_index);
-		}
 #pragma endregion
 
 #pragma region Getters/Setters
@@ -241,67 +154,16 @@ namespace sc
 			return KhronosTexture1::format_depth(m_internal_format);
 		};
 
-		size_t KhronosTexture1::data_length() const
+		KhronosTexture::Version KhronosTexture1::version() const
 		{
-			return data_length(0);
+			return Version::v1;
 		}
 
-		size_t KhronosTexture1::data_length(uint32_t level_index) const
-		{
-			if (level_index >= m_levels.size()) level_index = static_cast<uint32_t>(m_levels.size()) - 1;
-
-			return m_levels[level_index]->length();
-		}
-
-		uint8_t* KhronosTexture1::data() const
-		{
-			auto buffer = data(0);
-
-			if (buffer) return (uint8_t*)buffer->data();
-
-			return nullptr;
-		}
-
-		const Ref<Stream> KhronosTexture1::data(uint32_t level_index) const
-		{
-			if (level_index >= m_levels.size()) level_index = static_cast<uint32_t>(m_levels.size()) - 1;
-
-			return m_levels[level_index];
-		}
-
-		bool KhronosTexture1::is_compressed() const
-		{
-			return KhronosTexture1::format_compression(m_internal_format);
-		}
-
-		KhronosTexture::KhronosTextureCompression KhronosTexture1::compression_type()
+		KhronosTexture::KhronosTextureCompression KhronosTexture1::compression_type() const
 		{
 			return KhronosTexture1::format_compression_type(m_internal_format);
 		}
 
-		size_t KhronosTexture1::decompressed_data_length()
-		{
-			return decompressed_data_length(0);
-		}
-
-		size_t KhronosTexture1::decompressed_data_length(uint32_t level_index)
-		{
-			return Image::calculate_image_length(
-				m_width / (uint16_t)(pow(2, level_index)),
-				m_height / (uint16_t)(pow(2, level_index)),
-				depth()
-			);
-		}
-
-		void KhronosTexture1::decompress_data(Stream& output)
-		{
-			return decompress_data(output, 0);
-		}
-
-		uint32_t KhronosTexture1::level_count() const
-		{
-			return static_cast<uint32_t>(m_levels.size());
-		}
 #pragma endregion
 
 #pragma region Private Functions
