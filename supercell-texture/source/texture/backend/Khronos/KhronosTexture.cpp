@@ -48,6 +48,20 @@ namespace sc::texture
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
 			return PixelDepth::RGBA8;
 
 		default:
@@ -80,8 +94,45 @@ namespace sc::texture
 		}
 	}
 
-	Image::ColorSpace KhronosTexture::format_colorspace(glFormat format)
+	Image::ColorSpace KhronosTexture::format_colorspace(glFormat format, glInternalFormat internal)
 	{
+		switch (internal)
+		{
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
+			return ColorSpace::Linear;
+
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
+			return ColorSpace::sRGB;
+		default:
+			break;
+		}
+
 		switch (format)
 		{
 		case KhronosTexture::glFormat::GL_RGBA:
@@ -124,6 +175,20 @@ namespace sc::texture
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
 			return KhronosTextureCompression::ASTC;
 		default:
 			//assert(0 && "Unknown glInternalFormat");
@@ -149,6 +214,20 @@ namespace sc::texture
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
 		case KhronosTexture::glInternalFormat::GL_RGBA8:
 			return glFormat::GL_RGBA;
 
@@ -322,45 +401,59 @@ namespace sc::texture
 		switch (format)
 		{
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
 			x = 5; y = 4; z = 0;
 			break;
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
 			x = 6; y = 5; z = 0;
 			break;
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
 			x = 8; y = 5; z = 0;
 			break;
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
 			x = 8; y = 6; z = 0;
 			break;
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
 			x = 10; y = 5; z = 0;
 			break;
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
 			x = 10; y = 6; z = 0;
 			break;
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
 			x = 10; y = 8; z = 0;
 			break;
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
 			x = 10; y = 10; z = 0;
 			break;
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
 			x = 12; y = 10; z = 0;
 			break;
 		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
 			x = 12; y = 12; z = 0;
 			break;
 		case glInternalFormat::GL_COMPRESSED_RGBA_ASTC_4x4:
+		case glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
 			x = 4; y = 4; z = 0;
 			break;
 		case glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x5:
+		case glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
 			x = 5; y = 5; z = 0;
 			break;
 		case glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x6:
+		case glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
 			x = 6; y = 6; z = 0;
 			break;
 		case glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x8:
+		case glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
 			x = 8; y = 8; z = 0;
 			break;
 		default:

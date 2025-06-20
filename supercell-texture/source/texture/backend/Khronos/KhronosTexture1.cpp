@@ -146,7 +146,7 @@ namespace sc
 
 		Image::ColorSpace KhronosTexture1::colorspace() const
 		{
-			return KhronosTexture1::format_colorspace(m_format);
+			return KhronosTexture1::format_colorspace(m_format, m_internal_format);
 		}
 
 		Image::PixelDepth KhronosTexture1::depth() const

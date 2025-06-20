@@ -112,60 +112,88 @@ namespace sc::texture
 			return KhronosTexture::glInternalFormat::GL_RGBA8;
 
 		case sc::texture::KhronosTexture::VkFormat::ASTC_4x4_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_4x4_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_4x4;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_4x4_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_5x4_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_5x4_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x4;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_5x4_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_5x5_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_5x5_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x5;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_5x5_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_6x5_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_6x5_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x5;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_6x5_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_6x6_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_6x6_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x6;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_6x6_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_8x5_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_8x5_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x5;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_8x5_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_8x6_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_8x6_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x6;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_8x6_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_8x8_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_8x8_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x8;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_8x8_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_10x5_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_10x5_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x5;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_10x5_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_10x6_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_10x6_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x6;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_10x6_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_10x8_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_10x8_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x8;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_10x8_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_10x10_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_10x10_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_10x10_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_12x10_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_12x10_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10;
 
+		case sc::texture::KhronosTexture::VkFormat::ASTC_12x10_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10;
+
 		case sc::texture::KhronosTexture::VkFormat::ASTC_12x12_UNORM_BLOCK:
-		case sc::texture::KhronosTexture::VkFormat::ASTC_12x12_SRGB_BLOCK:
 			return KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12;
+
+		case sc::texture::KhronosTexture::VkFormat::ASTC_12x12_SRGB_BLOCK:
+			return KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12;
 
 		default:
 			return KhronosTexture::glInternalFormat::UNKNOWN;
