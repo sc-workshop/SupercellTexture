@@ -1,7 +1,7 @@
 # Project: supercell-texture
 
 # C++ headers and source files
-file(GLOB_RECURSE HEADERS source/*.h)
+file(GLOB_RECURSE HEADERS source/*.h source/*.hpp)
 file(GLOB_RECURSE SOURCES source/*.cpp)
 file(GLOB SCTX_SCHEMAS sctx_schemas/*.fbs)
 

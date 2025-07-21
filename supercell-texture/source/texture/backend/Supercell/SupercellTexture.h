@@ -92,7 +92,7 @@ namespace sc::texture
 		bool use_padding = false;
 
 	private:
-		ScPixel::Type m_pixel_type = ScPixel::Type::NONE;
+		ScPixel::Type m_pixel_type = ScPixel::Type::UNKNOWN;
 		size_t m_texture_data_length = 0;
 
 		mutable wk::Ref<wk::Stream> m_data;
