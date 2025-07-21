@@ -197,6 +197,7 @@ namespace sc::texture
 		enum class Compression
 		{
 			UNKNOWN,
+			RAW,
 			PVRTC,
 			EAC,
 			ETC1,
@@ -266,7 +267,7 @@ namespace sc::texture
 				return Compression::PVRTC;
 
 			default:
-				throw wk::Exception("Unsupported pixel type!");
+				return Compression::RAW;
 			}
 		}
 

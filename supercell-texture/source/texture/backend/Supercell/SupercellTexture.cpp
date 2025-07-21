@@ -278,7 +278,7 @@ namespace sc::texture
 
 	bool SupercellTexture::is_compressed() const
 	{
-		return true;
+		return ScPixel::get_compression(m_pixel_type) != ScPixel::Compression::RAW;
 	}
 
 	size_t SupercellTexture::level_count() const
@@ -310,8 +310,8 @@ namespace sc::texture
 		if (!loaded()) read_data();
 
 		const ScTextureLevel& level = get_level(level_idx);
-		wk::SharedMemoryStream stream((uint8_t*)m_data->data() + level.offset, m_data->length() - level.offset);
 
+		wk::SharedMemoryStream stream((uint8_t*)m_data->data() + level.offset, m_data->length() - level.offset);
 		SupercellTexture::decompress_data(m_width, m_height, m_pixel_type, stream, buffer);
 	}
 
@@ -425,6 +425,9 @@ namespace sc::texture
 		input.seek(0);
 		switch (compression)
 		{
+		case ScPixel::Compression::RAW:
+			output.write(input.data(), input.length());
+			break;
 		case ScPixel::Compression::ASTC:
 			decompress_astc(width, height, type, input, output);
 			break;
