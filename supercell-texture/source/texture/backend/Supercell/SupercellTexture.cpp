@@ -20,9 +20,9 @@ namespace sc::texture
 		m_levels.emplace_back(width, height, 0, hash);
 	}
 
-	SupercellTexture::SupercellTexture(std::filesystem::path path)
+	SupercellTexture::SupercellTexture(wk::Stream& stream)
 	{
-		m_stream = wk::CreateRef<StreamT>(path);
+		m_stream = &stream;
 		read_streaming_data();
 	}
 
@@ -220,7 +220,6 @@ namespace sc::texture
 			m_stream->read(m_data->data(), m_texture_data_length);
 		}
 
-		m_stream.reset();
 		return true;
 	}
 

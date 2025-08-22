@@ -21,15 +21,12 @@ namespace sc::texture
 		using IdArray = std::vector<uint32_t>;
 		using VariantsArray = std::vector<SupercellTexture>;
 
-	private:
-		using StreamT = wk::InputFileStream;
-
 	public:
 		// Texture variant constructor
 		SupercellTexture(uint16_t width, uint16_t height, ScPixel::Type type, wk::Ref<wk::MemoryStream> buffer);
 
-		// File constructor
-		SupercellTexture(std::filesystem::path path);
+		// Stream constructor
+		SupercellTexture(wk::Stream& path);
 
 		// New SCTX texture constructor
 		SupercellTexture(wk::RawImage& image, ScPixel::Type type, bool generate_mip_maps = false);
@@ -96,7 +93,7 @@ namespace sc::texture
 		size_t m_texture_data_length = 0;
 
 		mutable wk::Ref<wk::Stream> m_data;
-		mutable wk::Ref<StreamT> m_stream;
+		mutable wk::Stream* m_stream;
 
 		std::vector<ScTextureLevel> m_levels;
 	};
