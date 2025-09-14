@@ -53,7 +53,7 @@ namespace sc::texture
 		bool loaded() const;
 
 		size_t level_count() const;
-		const ScPixel::Type pixel_type() const;
+		ScPixel::Type pixel_type() const;
 
 		const ScTextureLevel& get_level(size_t index) const;
 

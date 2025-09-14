@@ -285,7 +285,7 @@ namespace sc::texture
 		return m_levels.size();
 	}
 
-	const ScPixel::Type SupercellTexture::pixel_type() const
+	ScPixel::Type SupercellTexture::pixel_type() const
 	{
 		return m_pixel_type;
 	}
