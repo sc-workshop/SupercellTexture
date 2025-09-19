@@ -1,5 +1,6 @@
 # Project: supercell-texture
 
+# TODO(pavidloq): make public and private sources
 # C++ headers and source files
 file(GLOB_RECURSE HEADERS source/*.h source/*.hpp)
 file(GLOB_RECURSE SOURCES source/*.cpp)
@@ -10,12 +11,10 @@ if(WK_BUILD_SHARED)
     # shared library
     set(TARGET supercell-texture-shared)
     add_library(${TARGET} SHARED)
-
 else()
     # static library
     set(TARGET supercell-texture-static)
     add_library(${TARGET} STATIC)
-
 endif()
 
 add_library(supercell::texture ALIAS ${TARGET})
@@ -28,7 +27,7 @@ target_include_directories(${TARGET} PUBLIC source)
 target_link_libraries(${TARGET} PUBLIC wk::core supercell::compression)
 
 set_target_properties(${TARGET} PROPERTIES
-    FOLDER SupercellSDK/core
+    FOLDER supercell-sdk/core
 )
 
 # setup project
@@ -39,11 +38,12 @@ wk_flatbuffers_generate_headers(
     TARGET SCTX_API
     INCLUDE_PREFIX texture/SCTX
     SCHEMAS ${SCTX_SCHEMAS}
-    FLAGS --cpp-std=c++17
+    FLAGS --cpp-std=c++17  # NOTE(pavidloq): should we use C++20 here??
 )
 
+# FIXME(pavidloq): twice?
 set_target_properties(${TARGET} PROPERTIES
-    FOLDER SupercellSDK/core
+    FOLDER supercell-sdk/core
 )
 
 target_link_libraries(${TARGET}
