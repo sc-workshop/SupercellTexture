@@ -35,7 +35,7 @@ namespace sc
 
 			if (!is_compressed())
 			{
-				m_type = glType::GL_UNSIGNED_BYTE;
+				m_type = glType::UNSIGNED_BYTE;
 			}
 			else
 			{
@@ -60,7 +60,7 @@ namespace sc
 			}
 			else
 			{
-				m_type = glType::GL_UNSIGNED_BYTE;
+				m_type = glType::UNSIGNED_BYTE;
 			}
 
 			SharedMemoryStream image_data(

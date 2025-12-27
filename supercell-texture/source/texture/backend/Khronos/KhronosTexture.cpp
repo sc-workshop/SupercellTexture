@@ -11,13 +11,13 @@ namespace sc::texture
 	{
 		switch (format)
 		{
-		case sc::texture::KhronosTexture::glInternalFormat::GL_RGBA8:
+		case sc::texture::KhronosTexture::glInternalFormat::RGBA8:
 			break;
-		case sc::texture::KhronosTexture::glInternalFormat::GL_RGB8:
+		case sc::texture::KhronosTexture::glInternalFormat::RGB8:
 			break;
-		case sc::texture::KhronosTexture::glInternalFormat::GL_LUMINANCE:
+		case sc::texture::KhronosTexture::glInternalFormat::LUMINANCE:
 			break;
-		case sc::texture::KhronosTexture::glInternalFormat::GL_LUMINANCE_ALPHA:
+		case sc::texture::KhronosTexture::glInternalFormat::LUMINANCE_ALPHA:
 			break;
 		
 		default:
@@ -25,43 +25,43 @@ namespace sc::texture
 		}
 		switch (format)
 		{
-		case KhronosTexture::glInternalFormat::GL_RGBA8:
+		case KhronosTexture::glInternalFormat::RGBA8:
 			return PixelDepth::RGBA8;
-		case KhronosTexture::glInternalFormat::GL_RGB8:
+		case KhronosTexture::glInternalFormat::RGB8:
 			return PixelDepth::RGB8;
-		case KhronosTexture::glInternalFormat::GL_LUMINANCE:
+		case KhronosTexture::glInternalFormat::LUMINANCE:
 			return PixelDepth::LUMINANCE8;
-		case KhronosTexture::glInternalFormat::GL_LUMINANCE_ALPHA:
+		case KhronosTexture::glInternalFormat::LUMINANCE_ALPHA:
 			return PixelDepth::LUMINANCE8_ALPHA8;
 
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_4x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
 			return PixelDepth::RGBA8;
 
 		default:
@@ -74,18 +74,18 @@ namespace sc::texture
 	{
 		switch (format)
 		{
-		case KhronosTexture::glFormat::GL_R:
+		case KhronosTexture::glFormat::R:
 			return BasePixelType::L;
 
-		case KhronosTexture::glFormat::GL_RG:
+		case KhronosTexture::glFormat::RG:
 			return BasePixelType::LA;
 
-		case KhronosTexture::glFormat::GL_SRGB:
-		case KhronosTexture::glFormat::GL_RGB:
+		case KhronosTexture::glFormat::SRGB:
+		case KhronosTexture::glFormat::RGB:
 			return BasePixelType::RGB;
 
-		case KhronosTexture::glFormat::GL_SRGB_ALPHA:
-		case KhronosTexture::glFormat::GL_RGBA:
+		case KhronosTexture::glFormat::SRGB_ALPHA:
+		case KhronosTexture::glFormat::RGBA:
 			return BasePixelType::RGBA;
 
 		default:
@@ -98,36 +98,36 @@ namespace sc::texture
 	{
 		switch (internal)
 		{
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_4x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x12:
 			return ColorSpace::Linear;
 
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
 			return ColorSpace::sRGB;
 		default:
 			break;
@@ -135,14 +135,14 @@ namespace sc::texture
 
 		switch (format)
 		{
-		case KhronosTexture::glFormat::GL_RGBA:
-		case KhronosTexture::glFormat::GL_RGB:
-		case KhronosTexture::glFormat::GL_RG:
-		case KhronosTexture::glFormat::GL_R:
+		case KhronosTexture::glFormat::RGBA:
+		case KhronosTexture::glFormat::RGB:
+		case KhronosTexture::glFormat::RG:
+		case KhronosTexture::glFormat::R:
 			return ColorSpace::Linear;
 
-		case KhronosTexture::glFormat::GL_SRGB:
-		case KhronosTexture::glFormat::GL_SRGB_ALPHA:
+		case KhronosTexture::glFormat::SRGB:
+		case KhronosTexture::glFormat::SRGB_ALPHA:
 			return ColorSpace::sRGB;
 
 		default:
@@ -155,40 +155,40 @@ namespace sc::texture
 	{
 		switch (format)
 		{
-		case KhronosTexture::glInternalFormat::GL_RGBA8:
-		case KhronosTexture::glInternalFormat::GL_RGB8:
-		case KhronosTexture::glInternalFormat::GL_LUMINANCE:
-		case KhronosTexture::glInternalFormat::GL_LUMINANCE_ALPHA:
+		case KhronosTexture::glInternalFormat::RGBA8:
+		case KhronosTexture::glInternalFormat::RGB8:
+		case KhronosTexture::glInternalFormat::LUMINANCE:
+		case KhronosTexture::glInternalFormat::LUMINANCE_ALPHA:
 			return KhronosTextureCompression::None;
 
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_4x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
 			return KhronosTextureCompression::ASTC;
 		default:
 			//assert(0 && "Unknown glInternalFormat");
@@ -200,47 +200,47 @@ namespace sc::texture
 	{
 		switch (format)
 		{
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_4x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
-		case KhronosTexture::glInternalFormat::GL_RGBA8:
-			return glFormat::GL_RGBA;
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::RGBA8:
+			return glFormat::RGBA;
 
-		case KhronosTexture::glInternalFormat::GL_RGB8:
-			return glFormat::GL_RGB;
-		case KhronosTexture::glInternalFormat::GL_LUMINANCE:
-			return glFormat::GL_RG;
-		case KhronosTexture::glInternalFormat::GL_LUMINANCE_ALPHA:
-			return glFormat::GL_R;
+		case KhronosTexture::glInternalFormat::RGB8:
+			return glFormat::RGB;
+		case KhronosTexture::glInternalFormat::LUMINANCE:
+			return glFormat::RG;
+		case KhronosTexture::glInternalFormat::LUMINANCE_ALPHA:
+			return glFormat::R;
 
 		default:
 			//assert(0 && "Unknown glInternalFormat");
-			return glFormat::GL_RGBA;
+			return glFormat::RGBA;
 		}
 	}
 
@@ -400,60 +400,60 @@ namespace sc::texture
 	{
 		switch (format)
 		{
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x4:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_5x4:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x4:
 			x = 5; y = 4; z = 0;
 			break;
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_6x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x5:
 			x = 6; y = 5; z = 0;
 			break;
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x5:
 			x = 8; y = 5; z = 0;
 			break;
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_8x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x6:
 			x = 8; y = 6; z = 0;
 			break;
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x5:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x5:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x5:
 			x = 10; y = 5; z = 0;
 			break;
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x6:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x6:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x6:
 			x = 10; y = 6; z = 0;
 			break;
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x8:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x8:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x8:
 			x = 10; y = 8; z = 0;
 			break;
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_10x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_10x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_10x10:
 			x = 10; y = 10; z = 0;
 			break;
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x10:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x10:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x10:
 			x = 12; y = 10; z = 0;
 			break;
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_RGBA_ASTC_12x12:
-		case KhronosTexture::glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::COMPRESSED_RGBA_ASTC_12x12:
+		case KhronosTexture::glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_12x12:
 			x = 12; y = 12; z = 0;
 			break;
-		case glInternalFormat::GL_COMPRESSED_RGBA_ASTC_4x4:
-		case glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
+		case glInternalFormat::COMPRESSED_RGBA_ASTC_4x4:
+		case glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_4x4:
 			x = 4; y = 4; z = 0;
 			break;
-		case glInternalFormat::GL_COMPRESSED_RGBA_ASTC_5x5:
-		case glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
+		case glInternalFormat::COMPRESSED_RGBA_ASTC_5x5:
+		case glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_5x5:
 			x = 5; y = 5; z = 0;
 			break;
-		case glInternalFormat::GL_COMPRESSED_RGBA_ASTC_6x6:
-		case glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
+		case glInternalFormat::COMPRESSED_RGBA_ASTC_6x6:
+		case glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_6x6:
 			x = 6; y = 6; z = 0;
 			break;
-		case glInternalFormat::GL_COMPRESSED_RGBA_ASTC_8x8:
-		case glInternalFormat::GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
+		case glInternalFormat::COMPRESSED_RGBA_ASTC_8x8:
+		case glInternalFormat::COMPRESSED_SRGB8_ALPHA8_ASTC_8x8:
 			x = 8; y = 8; z = 0;
 			break;
 		default:
