@@ -11,7 +11,7 @@ using namespace wk;
 
 namespace sc::texture
 {
-	SupercellTexture::SupercellTexture(uint16_t width, uint16_t height, ScPixel::Type type, Ref<wk::MemoryStream> buffer) :
+	SupercellTexture::SupercellTexture(uint16_t width, uint16_t height, ScPixel::Type type, Ref<wk::Stream> buffer) :
 		m_pixel_type(type), m_data(buffer)
 	{
 		m_width = width;
@@ -155,16 +155,19 @@ namespace sc::texture
 		if (!m_data->is_writable()) return;
 
 		ScPixel::Compression compression = ScPixel::get_compression(m_pixel_type);
-		auto do_compress = [&compression, this](wk::RawImage& image)
+		auto transcode = [&compression, this](wk::RawImage& image)
 			{
 				wk::SharedMemoryStream input(image.data(), image.data_length());
 				switch (compression)
 				{
+                case ScPixel::Compression::RAW:
+                    m_data->write(image.data(), image.data_length());
+                    break;
 				case ScPixel::Compression::ASTC:
 					SupercellTexture::compress_astc(image.width(), image.height(), m_pixel_type, input, *m_data);
 					break;
 				default:
-					throw wk::Exception("Unsupported compression!");
+					throw wk::Exception("Unsupported compression format!");
 					break;
 				}
 			};
@@ -176,11 +179,11 @@ namespace sc::texture
 			wk::RawImage temp(image.width(), image.height(), ScPixel::get_depth(m_pixel_type), image.colorspace());
 			image.copy(temp);
 
-			do_compress(temp);
+			transcode(temp);
 		}
 		else
 		{
-			do_compress(image);
+			transcode(image);
 		}
 		
 		size_t data_end = m_data->position();

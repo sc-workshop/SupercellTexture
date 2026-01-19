@@ -205,6 +205,7 @@ namespace sc::texture
 			ASTC
 		};
 
+		// Get compression type of pixel type
 		static Compression get_compression(ScPixel::Type type)
 		{
 			switch (type)
@@ -271,6 +272,40 @@ namespace sc::texture
 			}
 		}
 
+		// Returns raw pixel type for compressed types
+		static Type get_uncompressed_type(ScPixel::Type pixel) {
+			Compression type = get_compression(pixel);
+			if (type == Compression::RAW)
+				return pixel;
+
+			wk::Image::ColorSpace space = get_colorspace(pixel);
+			bool is_linear = space == wk::Image::ColorSpace::Linear;
+
+			// Mostly compressed types used with u8 types so handle this in general switch (for now)
+			wk::Image::BasePixelType channels = get_base_pixel_type(pixel);
+			switch (channels) {
+			case wk::Image::BasePixelType::RGBA:
+				return is_linear ? 
+					ScPixel::Type::RGBA8Unorm : 
+					ScPixel::Type::RGBA8Unorm_sRGB;
+
+			case wk::Image::BasePixelType::RGB:
+				return is_linear ? 
+					ScPixel::Type::RGB8Unorm : 
+					ScPixel::Type::RGB8Unorm_sRGB;
+
+			case wk::Image::BasePixelType::LA:
+				return ScPixel::Type::LuminanceAlpha;
+
+			case wk::Image::BasePixelType::L:
+				return ScPixel::Type::Luminance;
+
+			default:
+				return ScPixel::Type::UNKNOWN;
+			}
+		}
+
+		// Returns pixel raw depth type
 		static wk::Image::PixelDepth get_depth(ScPixel::Type type)
 		{
 			switch (type)
@@ -317,15 +352,26 @@ namespace sc::texture
 			case ScPixel::Type::RGBA8Unorm:
 			case ScPixel::Type::RGBA8Unorm_sRGB:
 			case ScPixel::Type::RGBA8Snorm:
-			//case ScPixel::Type::RGBA8Uint:
-			//case ScPixel::Type::RGBA8Sint:
+			case ScPixel::Type::RGBA8Uint:
+			case ScPixel::Type::RGBA8Sint:
 				return wk::Image::PixelDepth::RGBA8;
+
+			case ScPixel::Type::RGB8Unorm:
+            case ScPixel::Type::RGB8Unorm_sRGB:
+                return wk::Image::PixelDepth::RGB8;
+
+			case ScPixel::Type::LuminanceAlpha:
+				return wk::Image::PixelDepth::LUMINANCE8_ALPHA8;
+
+			case ScPixel::Type::Luminance:
+				return wk::Image::PixelDepth::LUMINANCE8;
 
 			default:
 				throw wk::Exception("Unsupported pixel type!");
 			}
 		}
 
+		// Returns pixel colorspace
 		static wk::Image::ColorSpace get_colorspace(ScPixel::Type type)
 		{
 			switch (type)
@@ -364,6 +410,7 @@ namespace sc::texture
 			}
 		}
 
+		// Returns number of channels for pixel
 		static wk::Image::BasePixelType get_base_pixel_type(ScPixel::Type type)
 		{
 			switch (type)
@@ -436,6 +483,7 @@ namespace sc::texture
 			}
 		}
 
+		// Returns count of blocks for astc types
 		static std::tuple<uint8_t, uint8_t, uint8_t> get_astc_blocks(ScPixel::Type type)
 		{
 			uint8_t x, y, z;
@@ -506,19 +554,21 @@ namespace sc::texture
 			return std::make_tuple(x, y, z);
 		}
 
+		// Returns pixel string representation
 		static std::string to_string(const ScPixel::Type type)
 		{
-			return ScPixel::string_map.at(type);
+			return ScPixel::pixel_map.at(type);
 		}
 
+		// Returns pixel type from string representation
 		static ScPixel::Type from_string(std::string type)
 		{
-			auto result = std::find_if(ScPixel::string_map.begin(), ScPixel::string_map.end(), [&type](const std::pair<ScPixel::Type, std::string>& pair)
+			auto result = std::find_if(ScPixel::pixel_map.begin(), ScPixel::pixel_map.end(), [&type](const std::pair<ScPixel::Type, std::string>& pair)
 				{
 					return pair.second == type;
 				});
 
-			if (result == ScPixel::string_map.end())
+			if (result == ScPixel::pixel_map.end())
 			{
 				return ScPixel::Type::UNKNOWN;
 			}
@@ -528,6 +578,7 @@ namespace sc::texture
 			}
 		}
 
+		// Returns pixel type based on Khronos texture type
 		static ScPixel::Type from_gl_format(KhronosTexture::glInternalFormat type)
 		{
 			switch (type)
@@ -594,115 +645,114 @@ namespace sc::texture
 			}
 		}
 
-	private:
-			static const inline std::unordered_map<ScPixel::Type, std::string> string_map = {
-				{ScPixel::Type::UNKNOWN, "Unknown"},
+		static const inline std::unordered_map<ScPixel::Type, std::string> pixel_map = {
+			{ScPixel::Type::UNKNOWN, "Unknown"},
 
-				{ScPixel::Type::A8Unorm, "A8Unorm"},
-				{ScPixel::Type::R8Unorm, "R8Unorm"},
-				{ScPixel::Type::R8Unorm_sRGB, "R8Unorm_sRGB"},
-				{ScPixel::Type::R8Snorm, "R8Snorm"},
-				{ScPixel::Type::R8Uint, "R8Uint"},
-				{ScPixel::Type::R8Sint, "R8Sint"},
-				{ScPixel::Type::R16Unorm, "R16Unorm"},
-				{ScPixel::Type::R16Snorm, "R16Snorm"},
-				{ScPixel::Type::R16Uint, "R16Uint"},
-				{ScPixel::Type::R16Sint, "R16Sint"},
-				{ScPixel::Type::R16Float, "R16Float"},
-				{ScPixel::Type::RG8Unorm, "RG8Unorm"},
-				{ScPixel::Type::RG8Unorm_sRGB, "RG8Unorm_sRGB"},
-				{ScPixel::Type::RG8Snorm, "RG8Snorm"},
-				{ScPixel::Type::RG8Uint, "RG8Uint"},
-				{ScPixel::Type::RG8Sint, "RG8Sint"},
-				{ScPixel::Type::R5G6B5Unorm, "R5G6B5Unorm"},
-				{ScPixel::Type::A1BGR5Unorm, "A1BGR5Unorm"},
-				{ScPixel::Type::ABGR4Unorm, "ABGR4Unorm"},
-				{ScPixel::Type::R32Uint, "R32Uint"},
-				{ScPixel::Type::R32Sint, "R32Sint"},
-				{ScPixel::Type::R32Float, "R32Float"},
-				{ScPixel::Type::RG16Unorm, "RG16Unorm"},
-				{ScPixel::Type::RG16Snorm, "RG16Snorm"},
-				{ScPixel::Type::RG16Uint, "RG16Uint"},
-				{ScPixel::Type::RG16Sint, "RG16Sint"},
-				{ScPixel::Type::RG16Float, "RG16Float"},
-				{ScPixel::Type::RGBA8Unorm, "RGBA8Unorm"},
-				{ScPixel::Type::RGBA8Unorm_sRGB, "RGBA8Unorm_sRGB"},
-				{ScPixel::Type::RGBA8Snorm, "RGBA8Snorm"},
-				{ScPixel::Type::RGBA8Uint, "RGBA8Uint"},
-				{ScPixel::Type::RGBA8Sint, "RGBA8Sint"},
-				{ScPixel::Type::BGRA8Unorm, "BGRA8Unorm"},
-				{ScPixel::Type::RGB10A2Unorm, "RGB10A2Unorm"},
-				{ScPixel::Type::RGB10A2Uint, "RGB10A2Uint"},
-				{ScPixel::Type::RG11B10UFloat, "RG11B10UFloat"},
-				{ScPixel::Type::BGR10A2Unorm, "BGR10A2Unorm"},
-				{ScPixel::Type::RG32Uint, "RG32Uint"},
-				{ScPixel::Type::RG32Sint, "RG32Sint"},
-				{ScPixel::Type::RG32Float, "RG32Float"},
-				{ScPixel::Type::RGBA16Unorm, "RGBA16Unorm"},
-				{ScPixel::Type::RGBA16Snorm, "RGBA16Snorm"},
-				{ScPixel::Type::RGBA16Uint, "RGBA16Uint"},
-				{ScPixel::Type::RGBA16Sint, "RGBA16Sint"},
-				{ScPixel::Type::RGBA16Float, "RGBA16Float"},
-				{ScPixel::Type::RGBA32Uint, "RGBA32Uint"},
-				{ScPixel::Type::RGBA32Sint, "RGBA32Sint"},
-				{ScPixel::Type::RGBA32Float, "RGBA32Float"},
-				{ScPixel::Type::PVRTC_RGB_2BPP, "PVRTC_RGB_2BPP"},
-				{ScPixel::Type::PVRTC_RGB_2BPP_sRGB, "PVRTC_RGB_2BPP_sRGB"},
-				{ScPixel::Type::PVRTC_RGB_4BPP, "PVRTC_RGB_4BPP"},
-				{ScPixel::Type::PVRTC_RGB_4BPP_sRGB, "PVRTC_RGB_4BPP_sRGB"},
-				{ScPixel::Type::PVRTC_RGBA_2BPP, "PVRTC_RGBA_2BPP"},
-				{ScPixel::Type::PVRTC_RGBA_2BPP_sRGB, "PVRTC_RGBA_2BPP_sRGB"},
-				{ScPixel::Type::PVRTC_RGBA_4BPP, "PVRTC_RGBA_4BPP"},
-				{ScPixel::Type::PVRTC_RGBA_4BPP_sRGB, "PVRTC_RGBA_4BPP_sRGB"},
-				{ScPixel::Type::Depth16Unorm, "Depth16Unorm"},
-				{ScPixel::Type::Stencil8, "Stencil8"},
-				{ScPixel::Type::Depth16Unorm_Stencil8, "Depth16Unorm_Stencil8"},
-				{ScPixel::Type::Depth24Unorm_Stencil8, "Depth24Unorm_Stencil8"},
-				{ScPixel::Type::Depth32Float_Stencil8, "Depth32Float_Stencil8"},
-				{ScPixel::Type::Luminance, "Luminance"},
-				{ScPixel::Type::LuminanceAlpha, "LuminanceAlpha"},
-				{ScPixel::Type::RGB8Unorm, "RGB8Unorm"},
-				{ScPixel::Type::RGB8Unorm_sRGB, "RGB8Unorm_sRGB"},
+			{ScPixel::Type::A8Unorm, "A8Unorm"},
+			{ScPixel::Type::R8Unorm, "R8Unorm"},
+			{ScPixel::Type::R8Unorm_sRGB, "R8Unorm_sRGB"},
+			{ScPixel::Type::R8Snorm, "R8Snorm"},
+			{ScPixel::Type::R8Uint, "R8Uint"},
+			{ScPixel::Type::R8Sint, "R8Sint"},
+			{ScPixel::Type::R16Unorm, "R16Unorm"},
+			{ScPixel::Type::R16Snorm, "R16Snorm"},
+			{ScPixel::Type::R16Uint, "R16Uint"},
+			{ScPixel::Type::R16Sint, "R16Sint"},
+			{ScPixel::Type::R16Float, "R16Float"},
+			{ScPixel::Type::RG8Unorm, "RG8Unorm"},
+			{ScPixel::Type::RG8Unorm_sRGB, "RG8Unorm_sRGB"},
+			{ScPixel::Type::RG8Snorm, "RG8Snorm"},
+			{ScPixel::Type::RG8Uint, "RG8Uint"},
+			{ScPixel::Type::RG8Sint, "RG8Sint"},
+			{ScPixel::Type::R5G6B5Unorm, "R5G6B5Unorm"},
+			{ScPixel::Type::A1BGR5Unorm, "A1BGR5Unorm"},
+			{ScPixel::Type::ABGR4Unorm, "ABGR4Unorm"},
+			{ScPixel::Type::R32Uint, "R32Uint"},
+			{ScPixel::Type::R32Sint, "R32Sint"},
+			{ScPixel::Type::R32Float, "R32Float"},
+			{ScPixel::Type::RG16Unorm, "RG16Unorm"},
+			{ScPixel::Type::RG16Snorm, "RG16Snorm"},
+			{ScPixel::Type::RG16Uint, "RG16Uint"},
+			{ScPixel::Type::RG16Sint, "RG16Sint"},
+			{ScPixel::Type::RG16Float, "RG16Float"},
+			{ScPixel::Type::RGBA8Unorm, "RGBA8Unorm"},
+			{ScPixel::Type::RGBA8Unorm_sRGB, "RGBA8Unorm_sRGB"},
+			{ScPixel::Type::RGBA8Snorm, "RGBA8Snorm"},
+			{ScPixel::Type::RGBA8Uint, "RGBA8Uint"},
+			{ScPixel::Type::RGBA8Sint, "RGBA8Sint"},
+			{ScPixel::Type::BGRA8Unorm, "BGRA8Unorm"},
+			{ScPixel::Type::RGB10A2Unorm, "RGB10A2Unorm"},
+			{ScPixel::Type::RGB10A2Uint, "RGB10A2Uint"},
+			{ScPixel::Type::RG11B10UFloat, "RG11B10UFloat"},
+			{ScPixel::Type::BGR10A2Unorm, "BGR10A2Unorm"},
+			{ScPixel::Type::RG32Uint, "RG32Uint"},
+			{ScPixel::Type::RG32Sint, "RG32Sint"},
+			{ScPixel::Type::RG32Float, "RG32Float"},
+			{ScPixel::Type::RGBA16Unorm, "RGBA16Unorm"},
+			{ScPixel::Type::RGBA16Snorm, "RGBA16Snorm"},
+			{ScPixel::Type::RGBA16Uint, "RGBA16Uint"},
+			{ScPixel::Type::RGBA16Sint, "RGBA16Sint"},
+			{ScPixel::Type::RGBA16Float, "RGBA16Float"},
+			{ScPixel::Type::RGBA32Uint, "RGBA32Uint"},
+			{ScPixel::Type::RGBA32Sint, "RGBA32Sint"},
+			{ScPixel::Type::RGBA32Float, "RGBA32Float"},
+			{ScPixel::Type::PVRTC_RGB_2BPP, "PVRTC_RGB_2BPP"},
+			{ScPixel::Type::PVRTC_RGB_2BPP_sRGB, "PVRTC_RGB_2BPP_sRGB"},
+			{ScPixel::Type::PVRTC_RGB_4BPP, "PVRTC_RGB_4BPP"},
+			{ScPixel::Type::PVRTC_RGB_4BPP_sRGB, "PVRTC_RGB_4BPP_sRGB"},
+			{ScPixel::Type::PVRTC_RGBA_2BPP, "PVRTC_RGBA_2BPP"},
+			{ScPixel::Type::PVRTC_RGBA_2BPP_sRGB, "PVRTC_RGBA_2BPP_sRGB"},
+			{ScPixel::Type::PVRTC_RGBA_4BPP, "PVRTC_RGBA_4BPP"},
+			{ScPixel::Type::PVRTC_RGBA_4BPP_sRGB, "PVRTC_RGBA_4BPP_sRGB"},
+			{ScPixel::Type::Depth16Unorm, "Depth16Unorm"},
+			{ScPixel::Type::Stencil8, "Stencil8"},
+			{ScPixel::Type::Depth16Unorm_Stencil8, "Depth16Unorm_Stencil8"},
+			{ScPixel::Type::Depth24Unorm_Stencil8, "Depth24Unorm_Stencil8"},
+			{ScPixel::Type::Depth32Float_Stencil8, "Depth32Float_Stencil8"},
+			{ScPixel::Type::Luminance, "Luminance"},
+			{ScPixel::Type::LuminanceAlpha, "LuminanceAlpha"},
+			{ScPixel::Type::RGB8Unorm, "RGB8Unorm"},
+			{ScPixel::Type::RGB8Unorm_sRGB, "RGB8Unorm_sRGB"},
 
-				{ScPixel::Type::EAC_R11, "EAC_R11"},
-				{ScPixel::Type::EAC_SIGNED_R11, "EAC_SIGNED_R11"},
-				{ScPixel::Type::EAC_RG11, "EAC_RG11"},
-				{ScPixel::Type::ETC2_EAC_RGBA8, "ETC2_EAC_RGBA8"},
-				{ScPixel::Type::ETC2_EAC_SRGBA8, "ETC2_EAC_SRGBA8"},
-				{ScPixel::Type::ETC2_RGB8, "ETC2_RGB8"},
-				{ScPixel::Type::ETC2_SRGB8, "ETC2_SRGB8"},
-				{ScPixel::Type::ETC2_RGB8_PUNCHTHROUGH_ALPHA1, "ETC2_RGB8_PUNCHTHROUGH_ALPHA1"},
-				{ScPixel::Type::ETC2_SRGB8_PUNCHTHROUGH_ALPHA1, "ETC2_SRGB8_PUNCHTHROUGH_ALPHA1"},
+			{ScPixel::Type::EAC_R11, "EAC_R11"},
+			{ScPixel::Type::EAC_SIGNED_R11, "EAC_SIGNED_R11"},
+			{ScPixel::Type::EAC_RG11, "EAC_RG11"},
+			{ScPixel::Type::ETC2_EAC_RGBA8, "ETC2_EAC_RGBA8"},
+			{ScPixel::Type::ETC2_EAC_SRGBA8, "ETC2_EAC_SRGBA8"},
+			{ScPixel::Type::ETC2_RGB8, "ETC2_RGB8"},
+			{ScPixel::Type::ETC2_SRGB8, "ETC2_SRGB8"},
+			{ScPixel::Type::ETC2_RGB8_PUNCHTHROUGH_ALPHA1, "ETC2_RGB8_PUNCHTHROUGH_ALPHA1"},
+			{ScPixel::Type::ETC2_SRGB8_PUNCHTHROUGH_ALPHA1, "ETC2_SRGB8_PUNCHTHROUGH_ALPHA1"},
 
-				{ScPixel::Type::ASTC_SRGBA8_4x4, "ASTC_SRGBA8_4x4"},
-				{ScPixel::Type::ASTC_SRGBA8_5x4, "ASTC_SRGBA8_5x4"},
-				{ScPixel::Type::ASTC_SRGBA8_5x5, "ASTC_SRGBA8_5x5"},
-				{ScPixel::Type::ASTC_SRGBA8_6x5, "ASTC_SRGBA8_6x5"},
-				{ScPixel::Type::ASTC_SRGBA8_6x6, "ASTC_SRGBA8_6x6"},
-				{ScPixel::Type::ASTC_SRGBA8_8x5, "ASTC_SRGBA8_8x5"},
-				{ScPixel::Type::ASTC_SRGBA8_8x6, "ASTC_SRGBA8_8x6"},
-				{ScPixel::Type::ASTC_SRGBA8_8x8, "ASTC_SRGBA8_8x8"},
-				{ScPixel::Type::ASTC_SRGBA8_10x5, "ASTC_SRGBA8_10x5"},
-				{ScPixel::Type::ASTC_SRGBA8_10x6, "ASTC_SRGBA8_10x6"},
-				{ScPixel::Type::ASTC_SRGBA8_10x8, "ASTC_SRGBA8_10x8"},
-				{ScPixel::Type::ASTC_SRGBA8_10x10, "ASTC_SRGBA8_10x10"},
-				{ScPixel::Type::ASTC_SRGBA8_12x10, "ASTC_SRGBA8_12x10"},
-				{ScPixel::Type::ASTC_SRGBA8_12x12, "ASTC_SRGBA8_12x12"},
+			{ScPixel::Type::ASTC_SRGBA8_4x4, "ASTC_SRGBA8_4x4"},
+			{ScPixel::Type::ASTC_SRGBA8_5x4, "ASTC_SRGBA8_5x4"},
+			{ScPixel::Type::ASTC_SRGBA8_5x5, "ASTC_SRGBA8_5x5"},
+			{ScPixel::Type::ASTC_SRGBA8_6x5, "ASTC_SRGBA8_6x5"},
+			{ScPixel::Type::ASTC_SRGBA8_6x6, "ASTC_SRGBA8_6x6"},
+			{ScPixel::Type::ASTC_SRGBA8_8x5, "ASTC_SRGBA8_8x5"},
+			{ScPixel::Type::ASTC_SRGBA8_8x6, "ASTC_SRGBA8_8x6"},
+			{ScPixel::Type::ASTC_SRGBA8_8x8, "ASTC_SRGBA8_8x8"},
+			{ScPixel::Type::ASTC_SRGBA8_10x5, "ASTC_SRGBA8_10x5"},
+			{ScPixel::Type::ASTC_SRGBA8_10x6, "ASTC_SRGBA8_10x6"},
+			{ScPixel::Type::ASTC_SRGBA8_10x8, "ASTC_SRGBA8_10x8"},
+			{ScPixel::Type::ASTC_SRGBA8_10x10, "ASTC_SRGBA8_10x10"},
+			{ScPixel::Type::ASTC_SRGBA8_12x10, "ASTC_SRGBA8_12x10"},
+			{ScPixel::Type::ASTC_SRGBA8_12x12, "ASTC_SRGBA8_12x12"},
 
-				{ScPixel::Type::ASTC_RGBA8_4x4, "ASTC_RGBA8_4x4"},
-				{ScPixel::Type::ASTC_RGBA8_5x4, "ASTC_RGBA8_5x4"},
-				{ScPixel::Type::ASTC_RGBA8_5x5, "ASTC_RGBA8_5x5"},
-				{ScPixel::Type::ASTC_RGBA8_6x5, "ASTC_RGBA8_6x5"},
-				{ScPixel::Type::ASTC_RGBA8_6x6, "ASTC_RGBA8_6x6"},
-				{ScPixel::Type::ASTC_RGBA8_8x5, "ASTC_RGBA8_8x5"},
-				{ScPixel::Type::ASTC_RGBA8_8x6, "ASTC_RGBA8_8x6"},
-				{ScPixel::Type::ASTC_RGBA8_8x8, "ASTC_RGBA8_8x8"},
-				{ScPixel::Type::ASTC_RGBA8_10x5, "ASTC_RGBA8_10x5"},
-				{ScPixel::Type::ASTC_RGBA8_10x6, "ASTC_RGBA8_10x6"},
-				{ScPixel::Type::ASTC_RGBA8_10x8, "ASTC_RGBA8_10x8"},
-				{ScPixel::Type::ASTC_RGBA8_10x10, "ASTC_RGBA8_10x10"},
-				{ScPixel::Type::ASTC_RGBA8_12x10, "ASTC_RGBA8_12x10"},
-				{ScPixel::Type::ASTC_RGBA8_12x12, "ASTC_RGBA8_12x12"}
-			};
+			{ScPixel::Type::ASTC_RGBA8_4x4, "ASTC_RGBA8_4x4"},
+			{ScPixel::Type::ASTC_RGBA8_5x4, "ASTC_RGBA8_5x4"},
+			{ScPixel::Type::ASTC_RGBA8_5x5, "ASTC_RGBA8_5x5"},
+			{ScPixel::Type::ASTC_RGBA8_6x5, "ASTC_RGBA8_6x5"},
+			{ScPixel::Type::ASTC_RGBA8_6x6, "ASTC_RGBA8_6x6"},
+			{ScPixel::Type::ASTC_RGBA8_8x5, "ASTC_RGBA8_8x5"},
+			{ScPixel::Type::ASTC_RGBA8_8x6, "ASTC_RGBA8_8x6"},
+			{ScPixel::Type::ASTC_RGBA8_8x8, "ASTC_RGBA8_8x8"},
+			{ScPixel::Type::ASTC_RGBA8_10x5, "ASTC_RGBA8_10x5"},
+			{ScPixel::Type::ASTC_RGBA8_10x6, "ASTC_RGBA8_10x6"},
+			{ScPixel::Type::ASTC_RGBA8_10x8, "ASTC_RGBA8_10x8"},
+			{ScPixel::Type::ASTC_RGBA8_10x10, "ASTC_RGBA8_10x10"},
+			{ScPixel::Type::ASTC_RGBA8_12x10, "ASTC_RGBA8_12x10"},
+			{ScPixel::Type::ASTC_RGBA8_12x12, "ASTC_RGBA8_12x12"}
+		};
 	};
 }

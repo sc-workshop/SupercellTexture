@@ -23,7 +23,7 @@ namespace sc::texture
 
 	public:
 		// Texture variant constructor
-		SupercellTexture(uint16_t width, uint16_t height, ScPixel::Type type, wk::Ref<wk::MemoryStream> buffer);
+		SupercellTexture(uint16_t width, uint16_t height, ScPixel::Type type, wk::Ref<wk::Stream> buffer);
 
 		// Stream constructor
 		SupercellTexture(wk::Stream& path);
