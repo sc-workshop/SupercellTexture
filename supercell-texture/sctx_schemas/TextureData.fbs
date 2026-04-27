@@ -32,7 +32,7 @@ table TextureData
     flags: TextureFlags = 0;
     texture_length: int;
     unk5: int = 0;
-    unk6: int = 0;
+    unk6: byte = 0;
     variants: TextureVariants;
 }
 
