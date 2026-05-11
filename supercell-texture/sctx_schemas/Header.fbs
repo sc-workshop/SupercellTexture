@@ -1,0 +1,55 @@
+namespace sc.texture.SCTX;
+
+enum TextureFlags : uint(bit_flags) { 
+    use_compression,
+    unknown_flag2,
+    unknown_flag3,
+    use_padding
+}
+
+union Extension {
+  ExtensionTags,
+  ExtensionASTCEncodingParams,
+  ExtensionProxyTexture
+}
+
+table Extensions
+{
+    extension: [Extension];
+}
+
+table ExtensionProxyTexture
+{
+    pixel_type: uint;
+    width: ushort;
+    height: ushort;
+    data: [ubyte];
+}
+
+table ExtensionTags {
+  tags:[string];
+}
+
+table ExtensionASTCEncodingParams {
+  value:string;
+}
+
+table Header
+{
+    unk1: ushort = 0;
+    pixel_type: uint;
+    width: ushort;
+    height: ushort;
+    levels_count: ubyte = 1;
+    unk3: ubyte = 0;
+    flags: TextureFlags = 0;
+    texture_length: int;
+    unk5: ubyte = 0;
+    unk6: ubyte = 0;
+
+    extensions: Extensions;
+}
+
+file_identifier "SCTX";
+file_extension "sctx";
+root_type Header;

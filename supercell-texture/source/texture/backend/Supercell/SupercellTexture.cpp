@@ -1,7 +1,7 @@
 #include "SupercellTexture.h"
 
 #include "ScPixel.hpp"
-#include "texture/SCTX/TextureData_generated.h"
+#include "texture/SCTX/Header_generated.h"
 #include "texture/SCTX/MipMapData_generated.h"
 
 #include "compression/compression.h"
@@ -52,17 +52,17 @@ namespace sc::texture
 
 		{
 			flatbuffers::Verifier verifier((const uint8_t*)texture_data.data(), texture_data.length());
-			bool is_valid_sctx = SCTX::VerifyTextureDataBuffer(verifier);
+			bool is_valid_sctx = SCTX::VerifyHeaderBuffer(verifier);
 			if (!is_valid_sctx)
 			{
 				throw wk::Exception("Failed to verify SCTX integrity");
 			}
 		}
-		
+
 		uint32_t levels_count;
 
 		{
-			const SCTX::TextureData* texture = SCTX::GetTextureData(texture_data.data());
+			const SCTX::Header* texture = SCTX::GetHeader(texture_data.data());
 			m_pixel_type = (ScPixel::Type)texture->pixel_type();
 			m_width = texture->width();
 			m_height = texture->height();
@@ -71,41 +71,48 @@ namespace sc::texture
 
 			set_data_flags((uint32_t)texture->flags());
 
-			auto* variants = texture->variants();
-			if (variants)
+			auto* extensions = texture->extensions();
+			if (extensions && extensions->extension())
 			{
-				auto ids = variants->streaming_id();
-				auto variants_data = variants->streaming_textures();
-				if (ids)
-				{
-					streaming_ids = IdArray(ids->begin(), ids->end());
-				}
+				auto extensions_data = extensions->extension();
+				auto extensions_types = extensions->extension_type();
 
-				if (variants_data)
+				for (flatbuffers::Vector<SCTX::Extensions>::size_type i = 0; extensions_data->size() > i; i++)
 				{
-					streaming_variants = VariantsArray();
-					streaming_variants->reserve(variants_data->size());
+					auto texture_extension_type = extensions_types->Get(i);
+					auto texture_extension = extensions_data->Get(i);
 
-					for (flatbuffers::Vector<SCTX::TextureVariants>::size_type i = 0; variants_data->size() > i; i++)
-					{
-						auto texture_variant = variants_data->Get(i);
-						auto texture_variant_data = texture_variant->data();
-						Ref<MemoryStream> variant_stream = CreateRef<MemoryStream>(texture_variant_data->size());
+					if (texture_extension_type == SCTX::Extension::ExtensionProxyTexture) {
+						auto proxy_texture = static_cast<const SCTX::ExtensionProxyTexture*>(texture_extension);
+						auto proxy_texture_data = proxy_texture->data();
+
+						wk::Ref<MemoryStream> proxy_texture_stream = CreateRef<MemoryStream>(proxy_texture_data->size());
 						Memory::copy(
-							(uint8_t*)texture_variant_data->data(),
-							(uint8_t*)variant_stream->data(),
-							texture_variant_data->size()
+							(uint8_t*)proxy_texture_data->data(),
+							(uint8_t*)proxy_texture_stream->data(),
+							proxy_texture_data->size()
 						);
-
-						streaming_variants->emplace_back(
-							texture_variant->width(), texture_variant->height(),
-							(ScPixel::Type)texture_variant->pixel_type(), variant_stream
+						proxy_textures.emplace_back(
+							proxy_texture->width(), proxy_texture->height(),
+							(ScPixel::Type)proxy_texture->pixel_type(), proxy_texture_stream
 						);
+					}
+					else if (texture_extension_type == SCTX::Extension::ExtensionASTCEncodingParams) {
+						auto astc_params_extension = static_cast<const SCTX::ExtensionASTCEncodingParams*>(texture_extension);
+						astc_encode_params = astc_params_extension->value()->str();
+					}
+					else if (texture_extension_type == SCTX::Extension::ExtensionTags) {
+						auto tags_extension = static_cast<const SCTX::ExtensionTags*>(texture_extension);
+						auto tags_data = tags_extension->tags();
+						for (flatbuffers::Vector<SCTX::ExtensionTags>::size_type i = 0; tags_data->size() > i; i++)
+						{
+							tags.emplace_back(tags_data->Get(i)->str());
+						}
 					}
 				}
 			}
 		}
-		
+
 		uint32_t mip_maps_data_length = m_stream->read_unsigned_int();
 		size_t texture_data_offset = m_stream->position() + mip_maps_data_length;
 
@@ -160,9 +167,9 @@ namespace sc::texture
 				wk::SharedMemoryStream input(image.data(), image.data_length());
 				switch (compression)
 				{
-                case ScPixel::Compression::RAW:
-                    m_data->write(image.data(), image.data_length());
-                    break;
+				case ScPixel::Compression::RAW:
+					m_data->write(image.data(), image.data_length());
+					break;
 				case ScPixel::Compression::ASTC:
 					SupercellTexture::compress_astc(image.width(), image.height(), m_pixel_type, input, *m_data);
 					break;
@@ -185,7 +192,7 @@ namespace sc::texture
 		{
 			transcode(image);
 		}
-		
+
 		size_t data_end = m_data->position();
 		size_t level_index = m_levels.size();
 
@@ -340,36 +347,65 @@ namespace sc::texture
 
 		// Data chunk
 		{
-			Offset<SCTX::TextureVariants> off_texture_variants = 0;
-			if (streaming_variants.has_value() && streaming_ids.has_value())
+			std::vector<SCTX::Extension> extensions_types;
+			std::vector<Offset<void>> extensions;
+
+			if (!tags.empty())
 			{
-				std::vector<Offset<SCTX::StreamingTextureDescriptor>> off_streaming_textures;
-				off_streaming_textures.reserve(streaming_variants->size());
-
-				for (auto& streaming_variant : streaming_variants.value())
+				std::vector<Offset<String>> off_tags;
+				off_tags.reserve(tags.size());
+				for (const std::string& tag : tags)
 				{
-					Offset<Vector<uint8_t>> off_streaming_variant_data = builder.CreateVector(streaming_variant.data(), streaming_variant.data_length());
-					Offset<SCTX::StreamingTextureDescriptor> off_streaming_variant =
-						SCTX::CreateStreamingTextureDescriptor(
-							builder,
-							(uint32_t)streaming_variant.pixel_type(), streaming_variant.width(), streaming_variant.height(),
-							off_streaming_variant_data
-						);
-
-					off_streaming_textures.push_back(off_streaming_variant);
+					off_tags.push_back(builder.CreateString(tag));
 				}
+				Offset<SCTX::ExtensionTags> off_extension_tags = SCTX::CreateExtensionTagsDirect(builder, &off_tags);
 
-				off_texture_variants = SCTX::CreateTextureVariantsDirect(builder, &streaming_ids.value(), &off_streaming_textures);
+				extensions.push_back(off_extension_tags.Union());
+				extensions_types.push_back(SCTX::Extension::ExtensionTags);
 			}
 
-			Offset<SCTX::TextureData> off_texture_data = SCTX::CreateTextureData(
+			if (!astc_encode_params.empty()) {
+				Offset<String> off_astc_encode_params = builder.CreateString(astc_encode_params);
+				Offset<SCTX::ExtensionASTCEncodingParams> off_extension_astc_params = SCTX::CreateExtensionASTCEncodingParams(builder, off_astc_encode_params);
+
+				extensions.push_back(off_extension_astc_params.Union());
+				extensions_types.push_back(SCTX::Extension::ExtensionASTCEncodingParams);
+			}
+
+			if (!proxy_textures.empty()) {
+				std::vector<Offset<SCTX::ExtensionProxyTexture>> off_proxy_textures;
+				off_proxy_textures.reserve(proxy_textures.size());
+				for (const SupercellTexture& proxy_texture : proxy_textures)
+				{
+					Offset<SCTX::ExtensionProxyTexture> off_proxy_texture = SCTX::CreateExtensionProxyTexture(
+						builder,
+						proxy_texture.width(), proxy_texture.height(), (uint32_t)proxy_texture.pixel_type(),
+						builder.CreateVector(proxy_texture.data(), proxy_texture.data_length())
+					);
+					off_proxy_textures.push_back(off_proxy_texture);
+				}
+				Offset<Vector<Offset<SCTX::ExtensionProxyTexture>>> off_proxy_textures_vector = builder.CreateVector(off_proxy_textures);
+
+				extensions.push_back(off_proxy_textures_vector.Union());
+				extensions_types.push_back(SCTX::Extension::ExtensionProxyTexture);
+			}
+
+			Offset<SCTX::Extensions> off_extensions;
+			if (!extensions.empty())
+			{
+				Offset<Vector<SCTX::Extension>> off_extension_types_vector = builder.CreateVector(extensions_types);
+				Offset<Vector<Offset<void>>> off_extensions_vector = builder.CreateVector(extensions);
+				off_extensions = SCTX::CreateExtensions(builder, off_extension_types_vector, off_extensions_vector);
+			}
+
+			Offset<SCTX::Header> off_texture_data = SCTX::CreateHeader(
 				builder, 0,
 				(uint32_t)m_pixel_type, m_width, m_height, (uint8_t)m_levels.size(),
 				0, (SCTX::TextureFlags)get_data_flags(), (uint32_t)m_data->length(), 0, 0,
-				off_texture_variants
+				off_extensions
 			);
 
-			builder.FinishSizePrefixed(off_texture_data, SCTX::TextureDataIdentifier());
+			builder.FinishSizePrefixed(off_texture_data, SCTX::HeaderIdentifier());
 
 			auto texture_data = builder.GetBufferSpan();
 			buffer.write(texture_data.data(), (uint32_t)texture_data.size_bytes());

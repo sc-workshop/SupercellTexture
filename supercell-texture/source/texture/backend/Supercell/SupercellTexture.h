@@ -18,10 +18,6 @@ namespace sc::texture
 	class SupercellTexture final : public CompressedImage
 	{
 	public:
-		using IdArray = std::vector<uint32_t>;
-		using VariantsArray = std::vector<SupercellTexture>;
-
-	public:
 		// Texture variant constructor
 		SupercellTexture(uint16_t width, uint16_t height, ScPixel::Type type, wk::Ref<wk::Stream> buffer);
 
@@ -80,13 +76,14 @@ namespace sc::texture
 		void create_new_level(wk::RawImage& image);
 
 	public:
-		std::optional<VariantsArray> streaming_variants;
-		std::optional<IdArray> streaming_ids;
-
 		bool use_compression = false;
 		bool unknown_flag1 = false;
 		bool unknown_flag2 = false;
 		bool use_padding = false;
+
+		std::vector<std::string> tags;
+		std::vector<SupercellTexture> proxy_textures;
+		std::string astc_encode_params;
 
 	private:
 		ScPixel::Type m_pixel_type = ScPixel::Type::UNKNOWN;
