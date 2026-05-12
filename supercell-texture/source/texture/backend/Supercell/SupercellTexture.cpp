@@ -104,9 +104,9 @@ namespace sc::texture
 					else if (texture_extension_type == SCTX::Extension::ExtensionTags) {
 						auto tags_extension = static_cast<const SCTX::ExtensionTags*>(texture_extension);
 						auto tags_data = tags_extension->tags();
-						for (flatbuffers::Vector<SCTX::ExtensionTags>::size_type i = 0; tags_data->size() > i; i++)
+						for (flatbuffers::Vector<SCTX::ExtensionTags>::size_type t = 0; tags_data->size() > t; t++)
 						{
-							tags.emplace_back(tags_data->Get(i)->str());
+							tags.emplace_back(tags_data->Get(t)->str());
 						}
 					}
 				}
@@ -379,7 +379,7 @@ namespace sc::texture
 				{
 					Offset<SCTX::ExtensionProxyTexture> off_proxy_texture = SCTX::CreateExtensionProxyTexture(
 						builder,
-						proxy_texture.width(), proxy_texture.height(), (uint32_t)proxy_texture.pixel_type(),
+						proxy_texture.width(), proxy_texture.height(), (uint16_t)proxy_texture.pixel_type(),
 						builder.CreateVector(proxy_texture.data(), proxy_texture.data_length())
 					);
 					off_proxy_textures.push_back(off_proxy_texture);
