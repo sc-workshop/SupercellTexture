@@ -1,0 +1,186 @@
+#include <cstdint>
+
+namespace sc::texture {
+    enum class glInternalFormat : uint32_t {
+        UNKNOWN = 0,
+
+        // Legacy / common
+        ALPHA8 = 0x803C,
+        LUMINANCE8 = 0x8040,
+        LUMINANCE8_ALPHA8 = 0x8045,
+
+        // R / RG
+        R8 = 0x8229,
+        R16 = 0x822A,
+        RG8 = 0x822B,
+        RG16 = 0x822C,
+        R16F = 0x822D,
+        R32F = 0x822E,
+        RG16F = 0x822F,
+        RG32F = 0x8230,
+        R8I = 0x8231,
+        R8UI = 0x8232,
+        R16I = 0x8233,
+        R16UI = 0x8234,
+        R32I = 0x8235,
+        R32UI = 0x8236,
+        RG8I = 0x8237,
+        RG8UI = 0x8238,
+        RG16I = 0x8239,
+        RG16UI = 0x823A,
+        RG32I = 0x823B,
+        RG32UI = 0x823C,
+
+        R8_SNORM = 0x8F94,
+        RG8_SNORM = 0x8F95,
+        RGBA8_SNORM = 0x8F97,
+        R16_SNORM = 0x8F98,
+        RG16_SNORM = 0x8F99,
+        RGBA16_SNORM = 0x8F9B,
+
+        // EXT_texture_sRGB_R8 / EXT_texture_sRGB_RG8
+        SR8_EXT = 0x8FBD,
+        SRG8_EXT = 0x8FBE,
+
+        // RGB / RGBA
+        RGB8 = 0x8051,
+        RGBA4 = 0x8056,
+        RGB5_A1 = 0x8057,
+        RGBA8 = 0x8058,
+        RGB10_A2 = 0x8059,
+        RGBA16 = 0x805B,
+
+        SRGB8 = 0x8C41,
+        SRGB8_ALPHA8 = 0x8C43,
+
+        RGB565 = 0x8D62,
+        RGBA32F = 0x8814,
+        RGBA16F = 0x881A,
+        R11F_G11F_B10F = 0x8C3A,
+
+        RGBA32UI = 0x8D70,
+        RGBA16UI = 0x8D76,
+        RGBA8UI = 0x8D7C,
+        RGBA32I = 0x8D82,
+        RGBA16I = 0x8D88,
+        RGBA8I = 0x8D8E,
+        RGB10_A2UI = 0x906F,
+
+        // EXT_texture_format_BGRA8888
+        BGRA8_EXT = 0x93A1,
+
+        // PVRTC IMG / EXT
+        COMPRESSED_RGB_PVRTC_4BPPV1_IMG = 0x8C00,
+        COMPRESSED_RGB_PVRTC_2BPPV1_IMG = 0x8C01,
+        COMPRESSED_RGBA_PVRTC_4BPPV1_IMG = 0x8C02,
+        COMPRESSED_RGBA_PVRTC_2BPPV1_IMG = 0x8C03,
+
+        COMPRESSED_SRGB_PVRTC_2BPPV1_EXT = 0x8A54,
+        COMPRESSED_SRGB_PVRTC_4BPPV1_EXT = 0x8A55,
+        COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT = 0x8A56,
+        COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT = 0x8A57,
+
+        // EAC / ETC2
+        COMPRESSED_R11_EAC = 0x9270,
+        COMPRESSED_SIGNED_R11_EAC = 0x9271,
+        COMPRESSED_RG11_EAC = 0x9272,
+        COMPRESSED_SIGNED_RG11_EAC = 0x9273,
+        COMPRESSED_RGB8_ETC2 = 0x9274,
+        COMPRESSED_SRGB8_ETC2 = 0x9275,
+        COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 = 0x9276,
+        COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2 = 0x9277,
+        COMPRESSED_RGBA8_ETC2_EAC = 0x9278,
+        COMPRESSED_SRGB8_ALPHA8_ETC2_EAC = 0x9279,
+
+        // ETC1 OES
+        ETC1_RGB8_OES = 0x8D64,
+
+        // ASTC
+        COMPRESSED_RGBA_ASTC_4x4 = 0x93B0,
+        COMPRESSED_RGBA_ASTC_5x4 = 0x93B1,
+        COMPRESSED_RGBA_ASTC_5x5 = 0x93B2,
+        COMPRESSED_RGBA_ASTC_6x5 = 0x93B3,
+        COMPRESSED_RGBA_ASTC_6x6 = 0x93B4,
+        COMPRESSED_RGBA_ASTC_8x5 = 0x93B5,
+        COMPRESSED_RGBA_ASTC_8x6 = 0x93B6,
+        COMPRESSED_RGBA_ASTC_8x8 = 0x93B7,
+        COMPRESSED_RGBA_ASTC_10x5 = 0x93B8,
+        COMPRESSED_RGBA_ASTC_10x6 = 0x93B9,
+        COMPRESSED_RGBA_ASTC_10x8 = 0x93BA,
+        COMPRESSED_RGBA_ASTC_10x10 = 0x93BB,
+        COMPRESSED_RGBA_ASTC_12x10 = 0x93BC,
+        COMPRESSED_RGBA_ASTC_12x12 = 0x93BD,
+
+        COMPRESSED_SRGB8_ALPHA8_ASTC_4x4 = 0x93D0,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_5x4 = 0x93D1,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_5x5 = 0x93D2,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_6x5 = 0x93D3,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_6x6 = 0x93D4,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_8x5 = 0x93D5,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_8x6 = 0x93D6,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_8x8 = 0x93D7,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_10x5 = 0x93D8,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_10x6 = 0x93D9,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_10x8 = 0x93DA,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_10x10 = 0x93DB,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_12x10 = 0x93DC,
+        COMPRESSED_SRGB8_ALPHA8_ASTC_12x12 = 0x93DD,
+
+        // Depth / stencil
+        DEPTH_COMPONENT16 = 0x81A5,
+        DEPTH_COMPONENT32F = 0x8CAC,
+        STENCIL_INDEX8 = 0x8D48,
+        DEPTH24_STENCIL8 = 0x88F0,
+        DEPTH32F_STENCIL8 = 0x8CAD
+    };
+
+    enum class glType : uint32_t {
+        COMPRESSED = 0,
+
+        BYTE = 0x1400,
+        UNSIGNED_BYTE = 0x1401,
+        SHORT = 0x1402,
+        UNSIGNED_SHORT = 0x1403,
+        INT = 0x1404,
+        UNSIGNED_INT = 0x1405,
+        HALF_FLOAT = 0x140B,
+        FLOAT = 0x1406,
+        FIXED = 0x140C,
+
+        UNSIGNED_SHORT_5_6_5 = 0x8363,
+        UNSIGNED_SHORT_4_4_4_4 = 0x8033,
+        UNSIGNED_SHORT_5_5_5_1 = 0x8034,
+        UNSIGNED_INT_2_10_10_10_REV = 0x8368,
+        UNSIGNED_INT_10F_11F_11F_REV = 0x8C3B,
+        UNSIGNED_INT_24_8 = 0x84FA,
+        FLOAT_32_UNSIGNED_INT_24_8_REV = 0x8DAD,
+    };
+
+    enum class glFormat : uint32_t {
+        UNKNOWN = 0,
+
+        GL_DEPTH_STENCIL = 0x84F9,
+        GL_STENCIL_INDEX = 0x1901,
+        GL_DEPTH_COMPONENT = 0x1902,
+
+        RED_INTEGER = 0x8D94,
+        RG_INTEGER = 0x8228,
+        RGB_INTEGER = 0x8D98,
+        RGBA_INTEGER = 0x8D99,
+
+        RG = 0x8227,
+        RED = 0x1903,
+        ALPHA = 0x1906,
+        RGB = 0x1907,
+        RGBA = 0x1908,
+        BGRA = 0x80E1,
+        LUMINANCE = 0x1909,
+        LUMINANCE_ALPHA = 0x190A,
+        SRGB = 0x8C40,
+        SRGB_ALPHA = 0x8C42,
+
+        DEPTH_COMPONENT = 0x1902,
+        STENCIL_INDEX = 0x1901,
+        DEPTH_STENCIL = 0x84F9
+    };
+}

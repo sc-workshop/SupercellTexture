@@ -2,79 +2,79 @@
 
 #include "KhronosTexture.h"
 
-namespace sc
-{
-	namespace texture
-	{
-		// TODO: mip maps ?
-		// TODO: ETC compression
-		class WORKSHOP_API KhronosTexture1 : public KhronosTexture
-		{
-		public:
-			static const uint8_t FileIdentifier[12];
+namespace sc::texture {
+    // TODO: mip maps ?
+    // TODO: ETC compression
+    class WORKSHOP_API KhronosTexture1 : public KhronosTexture {
+    public:
+        static const uint8_t FileIdentifier[12];
 
-		public:
-			/// <summary>
-			/// Reads ktx1 file from stream
-			/// </summary>
-			/// <param name="buffer"></param>
-			KhronosTexture1(wk::Stream& buffer);
+    public:
+        /// @brief Reads ktx1 file from stream
+        /// @param stream ktx1 file stream
+        KhronosTexture1(wk::Stream& stream);
 
-			/// <summary>
-			/// Initializes a object with specified format from provided buffer. Buffer is accepted as is and will not be compressed.
-			/// </summary>
-			/// <param name="format"></param>
-			/// <param name="buffer"></param>
-			/// <param name="buffer_size"></param>
-			KhronosTexture1(glInternalFormat format, uint16_t width, uint16_t height, uint8_t* buffer, size_t buffer_size);
+        /// @brief Initializes a object with specified format from provided buffer. Buffer is accepted as is and
+        /// will not be compressed.
+        /// @param format
+        /// @param width
+        /// @param height
+        /// @param buffer
+        /// @param buffer_size
+        KhronosTexture1(glInternalFormat format, uint16_t width, uint16_t height, uint8_t* buffer, size_t buffer_size);
 
-			/// <summary>
-			/// Initializes an object from provided Raw Image and compresses it if necessary.
-			/// </summary>
-			/// <param name="image"></param>
-			/// <param name="format"></param>
-			KhronosTexture1(wk::RawImage& image, glInternalFormat format);
+        /// @brief  Initializes a object with specified internal format, format and type from provided buffer.
+        /// Buffer is accepted as is and will not be compressed.
+        /// @param internal
+        /// @param type
+        /// @param format
+        /// @param width
+        /// @param height
+        /// @param buffer
+        /// @param buffer_size
+        KhronosTexture1(glInternalFormat internal,
+                        glType type,
+                        glFormat format,
+                        uint16_t width,
+                        uint16_t height,
+                        uint8_t* buffer,
+                        size_t buffer_size);
 
-		public:
-			virtual Version version() const;
-			virtual KhronosTextureCompression compression_type() const;
+        /// @brief  Initializes an object from provided Raw Image and compresses it if necessary.
+        /// @param image
+        /// @param format
+        KhronosTexture1(wk::RawImage& image, glInternalFormat format);
 
-		public:
-			virtual BasePixelType base_type() const;
-			virtual ColorSpace colorspace() const;
-			virtual PixelDepth depth() const;
+    public:
+        virtual Version version() const;
+        virtual KhronosTextureCompression compression_type() const;
 
-		public:
-			virtual void write(wk::Stream& buffer);
+    public:
+        virtual BasePixelType base_type() const;
+        virtual ColorSpace colorspace() const;
+        virtual PixelDepth depth() const;
 
-		public:
-			virtual glInternalFormat internal_format() const
-			{
-				return m_internal_format;
-			}
+    public:
+        virtual void write(wk::Stream& buffer);
 
-			virtual glFormat format() const
-			{
-				return m_format;
-			}
+    public:
+        virtual glInternalFormat internal_format() const { return m_internal_format; }
 
-			virtual glType type() const
-			{
-				return m_type;
-			}
+        virtual glFormat format() const { return m_format; }
 
-		private:
-			/// <summary>
-			/// Reads KTX header
-			/// </summary>
-			/// <param name="buffer"></param>
-			/// <returns> Image levels count </returns>
-			uint32_t read_header(wk::Stream& buffer);
+        virtual glType type() const { return m_type; }
 
-		private:
-			glType m_type;
-			glFormat m_format;
-			glInternalFormat m_internal_format;
-		};
-	}
+    private:
+        /// @brief Reads KTX header
+        /// @param buffer
+        /// @return Image levels count
+        uint32_t read_header(wk::Stream& buffer);
+
+        void construct_buffer(uint8_t* buffer, size_t size);
+
+    private:
+        glType m_type;
+        glFormat m_format;
+        glInternalFormat m_internal_format;
+    };
 }

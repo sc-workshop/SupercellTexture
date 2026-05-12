@@ -1,0 +1,45 @@
+#include <cstdint>
+
+namespace sc::texture {
+    enum class vkFormat : uint32_t {
+        Unknown = 0,
+
+        R8_UNORM = 9,
+        R8_SRGB = 15,
+        R8G8_UNORM = 16,
+        R8G8_SRGB = 22,
+        R8G8B8_UNORM = 23,
+        R8G8B8_SRGB = 29,
+        R8G8B8A8_UNORM = 37,
+        R8G8B8A8_SRGB = 43,
+
+        ASTC_4x4_UNORM_BLOCK = 157,
+        ASTC_4x4_SRGB_BLOCK = 158,
+        ASTC_5x4_UNORM_BLOCK = 159,
+        ASTC_5x4_SRGB_BLOCK = 160,
+        ASTC_5x5_UNORM_BLOCK = 161,
+        ASTC_5x5_SRGB_BLOCK = 162,
+        ASTC_6x5_UNORM_BLOCK = 163,
+        ASTC_6x5_SRGB_BLOCK = 164,
+        ASTC_6x6_UNORM_BLOCK = 165,
+        ASTC_6x6_SRGB_BLOCK = 166,
+        ASTC_8x5_UNORM_BLOCK = 167,
+        ASTC_8x5_SRGB_BLOCK = 168,
+        ASTC_8x6_UNORM_BLOCK = 169,
+        ASTC_8x6_SRGB_BLOCK = 170,
+        ASTC_8x8_UNORM_BLOCK = 171,
+        ASTC_8x8_SRGB_BLOCK = 172,
+        ASTC_10x5_UNORM_BLOCK = 173,
+        ASTC_10x5_SRGB_BLOCK = 174,
+        ASTC_10x6_UNORM_BLOCK = 175,
+        ASTC_10x6_SRGB_BLOCK = 176,
+        ASTC_10x8_UNORM_BLOCK = 177,
+        ASTC_10x8_SRGB_BLOCK = 178,
+        ASTC_10x10_UNORM_BLOCK = 179,
+        ASTC_10x10_SRGB_BLOCK = 180,
+        ASTC_12x10_UNORM_BLOCK = 181,
+        ASTC_12x10_SRGB_BLOCK = 182,
+        ASTC_12x12_UNORM_BLOCK = 183,
+        ASTC_12x12_SRGB_BLOCK = 184,
+    };
+}
