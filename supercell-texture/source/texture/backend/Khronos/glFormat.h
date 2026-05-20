@@ -159,9 +159,9 @@ namespace sc::texture {
     enum class glFormat : uint32_t {
         UNKNOWN = 0,
 
-        GL_DEPTH_STENCIL = 0x84F9,
-        GL_STENCIL_INDEX = 0x1901,
-        GL_DEPTH_COMPONENT = 0x1902,
+        DEPTH_STENCIL = 0x84F9,
+        STENCIL_INDEX = 0x1901,
+        DEPTH_COMPONENT = 0x1902,
 
         RED_INTEGER = 0x8D94,
         RG_INTEGER = 0x8228,
@@ -178,9 +178,5 @@ namespace sc::texture {
         LUMINANCE_ALPHA = 0x190A,
         SRGB = 0x8C40,
         SRGB_ALPHA = 0x8C42,
-
-        DEPTH_COMPONENT = 0x1902,
-        STENCIL_INDEX = 0x1901,
-        DEPTH_STENCIL = 0x84F9
     };
 }
