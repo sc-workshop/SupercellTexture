@@ -335,23 +335,18 @@ namespace sc::texture {
             }
 
             if (!proxy_textures.empty()) {
-                std::vector<Offset<SCTX::ExtensionProxyTexture>> off_proxy_textures;
-                off_proxy_textures.reserve(proxy_textures.size());
                 for (const SupercellTexture& proxy_texture : proxy_textures) {
                     Offset<SCTX::ExtensionProxyTexture> off_proxy_texture =
                         SCTX::CreateExtensionProxyTexture(builder,
+                                                          (uint16_t) proxy_texture.pixel_type(),
                                                           proxy_texture.width(),
                                                           proxy_texture.height(),
-                                                          (uint16_t) proxy_texture.pixel_type(),
                                                           builder.CreateVector(proxy_texture.data(),
                                                                                proxy_texture.data_length()));
-                    off_proxy_textures.push_back(off_proxy_texture);
-                }
-                Offset<Vector<Offset<SCTX::ExtensionProxyTexture>>> off_proxy_textures_vector =
-                    builder.CreateVector(off_proxy_textures);
 
-                extensions.push_back(off_proxy_textures_vector.Union());
-                extensions_types.push_back(SCTX::Extension::ExtensionProxyTexture);
+                    extensions.push_back(off_proxy_texture.Union());
+                    extensions_types.push_back(SCTX::Extension::ExtensionProxyTexture);
+                }                
             }
 
             Offset<SCTX::Extensions> off_extensions;
